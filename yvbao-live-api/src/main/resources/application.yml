@@ -1,0 +1,18 @@
+server:
+  port: 8080
+dubbo:
+  application:
+    logger: slf4j
+    name: yvbao-live-api
+  registry:
+    address: nacos://192.168.88.130:8848?username=nacos&password=nacos
+    register-mode: instance
+  protocol:
+    name: tri
+    port: 50051
+
+spring:
+  application:
+    name: yvbao-live-api
+
+
