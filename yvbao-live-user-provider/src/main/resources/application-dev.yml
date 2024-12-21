@@ -17,6 +17,25 @@ app:
     # 跨域，开发阶段可以设置为 * 不限制
     cross-origin: '*'
 
+spring:
+  datasource:
+    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+    url: jdbc:shardingsphere:classpath:yvbao-db-sharding.yaml
+    hikari:
+      pool-name: yvbao-user-pool
+      minimum-idle: 15
+      maximum-pool-size: 300
+      connection-timeout: 4000
+      max-lifetime: 60000
+  data:
+    redis:
+      port: 6379
+      host: 192.168.88.130
+      lettuce:
+        pool:
+          min-idle: 10
+          max-active: 50
+          max-idle: 20
 dubbo:
   application:
     logger: slf4j

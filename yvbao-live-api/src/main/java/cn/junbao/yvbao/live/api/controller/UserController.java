@@ -20,4 +20,5 @@ public class UserController {
         logger.info("API   getUserInfo 开始,{}",userId);
         return userRpc.getUserById(userId);
     }
+
 }

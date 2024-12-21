@@ -4,6 +4,7 @@ dubbo:
   application:
     logger: slf4j
     name: yvbao-live-api
+    qos-enable: false
   registry:
     address: nacos://192.168.88.130:8848?username=nacos&password=nacos
     register-mode: instance

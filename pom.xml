@@ -22,6 +22,9 @@
         <module>yvbao-live-user-provider</module>
         <module>yvbao-live-api</module>
         <module>yvbao-live-common-interface</module>
+        <module>yvbao-live-framework</module>
+        <module>yvbao-live-framework/yvbao-live-framework-datesource-starter</module>
+        <module>yvbao-live-framework/yvbao-live-framework-redis-starter</module>
     </modules>
 
     <dependencyManagement>
