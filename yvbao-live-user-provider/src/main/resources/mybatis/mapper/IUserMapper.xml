@@ -19,4 +19,13 @@
     </select>
 
 
+    <select id="getBatchByUserIds"  resultMap="dataMap">
+        select * from t_user where user_id in
+        <foreach item="id" index="index" collection="userIds"
+                 open="(" separator="," close=")">
+                 #{id}
+        </foreach>
+    </select>
+
+
 </mapper>
