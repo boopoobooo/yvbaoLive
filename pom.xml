@@ -25,6 +25,8 @@
         <module>yvbao-live-framework</module>
         <module>yvbao-live-framework/yvbao-live-framework-datesource-starter</module>
         <module>yvbao-live-framework/yvbao-live-framework-redis-starter</module>
+        <module>yvbao-live-id-generate-interface</module>
+        <module>yvbao-live-id-generate-provider</module>
     </modules>
 
     <dependencyManagement>

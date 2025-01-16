@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.junbao.yvbao.live.id.generate.dao.mapper.IdGenerateMapper">
+
+    <resultMap id="dataMap" type="cn.junbao.yvbao.live.id.generate.dao.po.IdGeneratePO">
+        <id column="id" property="id"/>
+        <result column="remark" property="remark"/>
+        <result column="init_num" property="initNum"/>
+        <result column="step" property="step"/>
+        <result column="is_seq" property="isSeq"/>
+        <result column="current_start" property="currentStart"/>
+        <result column="next_threshold" property="nextThreshold"/>
+        <result column="id_prefix" property="idPrefix"/>
+        <result column="version" property="version"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <update id="updateNewIdCountAndVersion">
+        update t_id_generate_config
+        set next_threshold = next_threshold+step,
+            current_start = current_start+step,
+            version=version + 1
+        where id =#{id} and version=#{version}
+    </update>
+
+    <select id="selectById" resultMap="dataMap">
+        select * from t_id_generate_config
+        where id = #{id}
+    </select>
+
+    <select id="selectAll" resultMap="dataMap">
+        select * from t_id_generate_config
+    </select>
+
+
+</mapper>
