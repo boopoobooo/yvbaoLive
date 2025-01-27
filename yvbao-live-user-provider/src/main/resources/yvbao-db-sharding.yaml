@@ -2,14 +2,14 @@ dataSources:
   user_master:  ##新表，重建的分表
     dataSourceClassName: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    jdbcUrl: jdbc:mysql://192.168.88.130:13306/yvbao_live_user?useUnicode=true&characterEncoding=utf8
+    jdbcUrl: jdbc:mysql://1.94.50.144:13306/yubao_live_user?useUnicode=true&characterEncoding=utf8
     username: root
-    password: root
+    password: 0.123
 
   user_slave0: ##新表，重建的分表
     dataSourceClassName: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    jdbcUrl: jdbc:mysql://192.168.88.130:13307/yvbao_live_user?useUnicode=true&characterEncoding=utf8
+    jdbcUrl: jdbc:mysql://1.94.50.144:13307/yubao_live_user?useUnicode=true&characterEncoding=utf8
     username: root
     password: root
 

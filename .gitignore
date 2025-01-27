@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/data/log/log-error-2024-12-19.0.log
+/data/log/
