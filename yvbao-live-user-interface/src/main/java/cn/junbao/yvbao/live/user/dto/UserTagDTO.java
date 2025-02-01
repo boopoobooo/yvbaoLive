@@ -24,6 +24,9 @@ public class UserTagDTO {
         this.updateTime = updateTime;
     }
 
+    public UserTagDTO() {
+    }
+
     public Long getId() {
         return id;
     }

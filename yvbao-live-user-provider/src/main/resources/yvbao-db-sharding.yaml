@@ -11,7 +11,7 @@ dataSources:
     driver-class-name: com.mysql.cj.jdbc.Driver
     jdbcUrl: jdbc:mysql://1.94.50.144:13307/yubao_live_user?useUnicode=true&characterEncoding=utf8
     username: root
-    password: root
+    password: 0.123
 
 rules:
   - !READWRITE_SPLITTING
@@ -25,18 +25,29 @@ rules:
     defaultDataSource: user_ds ## 不分表分分库的默认数据源
   - !SHARDING
     tables:
-      t_user:
-        actualDataNodes: user_ds.t_user_${(0..3).collect(){it.toString().padLeft(2,'0')}}
+      user:
+        actualDataNodes: user_ds.user_${(0..3).collect(){it.toString().padLeft(2,'0')}}
         tableStrategy:
           standard:
             shardingColumn: user_id
-            shardingAlgorithmName: t_user-inline
+            shardingAlgorithmName: user-inline
+
+      user_tag:
+        actualDataNodes: user_ds.user_tag_${(0..3).collect(){it.toString().padLeft(2,'0')}}
+        tableStrategy:
+          standard:
+            shardingColumn: user_id
+            shardingAlgorithmName: user_tag-inline
 
     shardingAlgorithms:
-      t_user-inline:
+      user-inline:
         type: INLINE
         props:
-          algorithm-expression: t_user_${(user_id % 4).toString().padLeft(2,'0')}
+          algorithm-expression: user_${(user_id % 4).toString().padLeft(2,'0')}
+      user_tag-inline:
+        type: INLINE
+        props:
+          algorithm-expression: user_tag_${(user_id % 4).toString().padLeft(2,'0')}
 
 props:
   sql-show: true

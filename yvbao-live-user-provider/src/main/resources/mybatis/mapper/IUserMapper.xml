@@ -3,6 +3,7 @@
 <mapper namespace="cn.junbao.yvbao.live.user.provider.dao.mapper.IUserMapper">
 
     <resultMap id="dataMap" type="cn.junbao.yvbao.live.user.provider.dao.po.UserPO">
+        <id column="id" property="id" />
         <id column="user_id" property="userId"/>
         <result column="nick_name" property="nickName"/>
         <result column="true_name" property="trueName"/>
@@ -15,12 +16,12 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
     <select id="getUserById" resultMap="dataMap">
-        select * from t_user where user_id = #{userId}
+        select * from user where user_id = #{userId}
     </select>
 
 
     <select id="getBatchByUserIds"  resultMap="dataMap">
-        select * from t_user where user_id in
+        select * from user where user_id in
         <foreach item="id" index="index" collection="userIds"
                  open="(" separator="," close=")">
                  #{id}

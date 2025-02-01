@@ -15,7 +15,7 @@ public interface IUserTagMapper {
     /**
      * 取消位置上的标签
      */
-    int cancelTag(Long userId, String fieldName, long tag);
+    int cancelTag(@Param("userId") Long userId,@Param("fieldName") String fieldName,@Param("tag") long tag);
 
     UserTagPO selectByUserId(Long userId);
 

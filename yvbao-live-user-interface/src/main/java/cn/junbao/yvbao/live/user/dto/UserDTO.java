@@ -20,6 +20,22 @@ public class UserDTO implements Serializable {
     private Date createTime;
     private Date updateTime;
 
+    public UserDTO(Long userId, String nickName, String trueName, String avatar, Integer sex, Integer workCity, Integer bornCity, Date bornDate, Date createTime, Date updateTime) {
+        this.userId = userId;
+        this.nickName = nickName;
+        this.trueName = trueName;
+        this.avatar = avatar;
+        this.sex = sex;
+        this.workCity = workCity;
+        this.bornCity = bornCity;
+        this.bornDate = bornDate;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+    }
+
+    public UserDTO() {
+    }
+
     public Long getUserId() {
         return userId;
     }

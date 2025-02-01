@@ -10,6 +10,7 @@ import cn.junbao.yvbao.live.user.provider.dao.po.UserTagPO;
 import cn.junbao.yvbao.live.user.provider.service.IUserTagService;
 import cn.junbao.yvbao.live.user.provider.utils.TagInfoUtil;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
@@ -21,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class UserTagServiceImpl implements IUserTagService {
 
     @Resource
@@ -55,6 +57,7 @@ public class UserTagServiceImpl implements IUserTagService {
                         "3".getBytes(StandardCharsets.UTF_8));
             }
         });
+        log.info("当前userTagLockStatus ====== "+ userTagLockStatus);
         if (! "ok".equalsIgnoreCase(userTagLockStatus)){
             return false;
         }
@@ -68,6 +71,7 @@ public class UserTagServiceImpl implements IUserTagService {
         //表中没有该用户数据，插入该用户数据
         userTagMapper.insert(userId);
         updateStatus = userTagMapper.setTag(userId, userTagsEnum.getFieldName(), userTagsEnum.getTag());
+        log.info("[setTag] 设置tag成功！！");
         redisTemplate.delete(userTagLockKey);
         redisTemplate.delete(userProviderCacheKeyBuilder.buildUserTagKey(userId));
         return updateStatus > 0 ;
@@ -75,6 +79,7 @@ public class UserTagServiceImpl implements IUserTagService {
 
     @Override
     public boolean cancelTag(Long userId, UserTagsEnum userTagsEnum) {
+
         int cancelStatus = userTagMapper.cancelTag(userId, userTagsEnum.getFieldName(), userTagsEnum.getTag());
         if (cancelStatus <= 0 ){
             return false;

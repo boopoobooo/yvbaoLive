@@ -42,9 +42,9 @@ spring:
 dubbo:
   application:
     logger: slf4j
-    name: yvbao-live-user-provider
+    name: yubao-live-user-provider
   registry:
-    address: nacos://192.168.88.130:8848?username=nacos&password=nacos
+    address: nacos://localhost:8848
     register-mode: instance
   protocol:
     name: tri
