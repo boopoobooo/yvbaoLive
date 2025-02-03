@@ -1,11 +1,12 @@
 package cn.junbao.yvbao.live.user.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 用户标签
  */
-public class UserTagDTO {
+public class UserTagDTO implements Serializable {
     private Long id;
     private Long userId;
     private Long tagInfo01;
