@@ -20,7 +20,7 @@
 #spring:
 #  datasource:
 #    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
-#    url: jdbc:shardingsphere:classpath:yvbao-db-sharding.yaml
+#    url: jdbc:shardingsphere:classpath:yubao-db-sharding.yaml
 #    hikari:
 #      pool-name: yvbao-user-pool
 #      minimum-idle: 15

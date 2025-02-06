@@ -17,6 +17,7 @@
         <yvbao-mysql.version>8.0.28</yvbao-mysql.version>
         <spring-cloud-boostrap.version>3.1.5</spring-cloud-boostrap.version>
         <spring-cloud-alibaba.version>2023.0.1.2</spring-cloud-alibaba.version>
+        <sharding.jdbc.version>5.4.1</sharding.jdbc.version>
     </properties>
 
     <modules>
@@ -68,8 +69,20 @@
                 <artifactId>dubbo-spring-boot-starter</artifactId>
                 <version>${dubbo.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>shardingsphere-jdbc-core</artifactId>
+                <version>${sharding.jdbc.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
 
 
 </project>

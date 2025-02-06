@@ -17,10 +17,9 @@ rules:
   - !READWRITE_SPLITTING
     dataSources:
       user_ds:
-        staticStrategy:
-          writeDataSourceName: user_master
-          readDataSourceNames:
-            - user_slave0
+        writeDataSourceName: user_master
+        readDataSourceNames:
+          - user_slave0
   - !SINGLE
     defaultDataSource: user_ds ## 不分表分分库的默认数据源
   - !SHARDING

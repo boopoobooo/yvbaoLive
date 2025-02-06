@@ -1,4 +1,4 @@
-package cn.junbao.yvbao.live.framework.datasource.starter;
+package cn.junbao.yvbao.live.framework.datasource.starter.config;
 
 
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class ShardingJdbcDatasourceAutoInitConnectionConfig {
     @Bean
     public ApplicationRunner runner(DataSource dataSource) {
         return args -> {
-            LOGGER.info("dataSource: {}", dataSource);
+            LOGGER.info("[ShardingJdbcDatasourceAutoInitConnectionConfig]dataSource: {}", dataSource);
             //手动触发下连接池的连接创建
             Connection connection = dataSource.getConnection();
         };
