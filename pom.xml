@@ -3,10 +3,10 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>cn.junbao</groupId>
-    <artifactId>yvbao-live</artifactId>
+    <artifactId>yubao-live</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>yvbao-live-app</name>
+    <name>yubao-live-app</name>
 
     <properties>
         <java.version>17</java.version>
@@ -14,20 +14,21 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dubbo.version>3.3.0</dubbo.version>
         <spring-boot.version>3.3.1</spring-boot.version>
-        <yvbao-mysql.version>8.0.28</yvbao-mysql.version>
+        <yubao-mysql.version>8.0.28</yubao-mysql.version>
         <spring-cloud-boostrap.version>3.1.5</spring-cloud-boostrap.version>
         <spring-cloud-alibaba.version>2023.0.1.2</spring-cloud-alibaba.version>
         <sharding.jdbc.version>5.4.1</sharding.jdbc.version>
     </properties>
 
     <modules>
-        <module>yvbao-live-user-interface</module>
-        <module>yvbao-live-user-provider</module>
-        <module>yvbao-live-api</module>
-        <module>yvbao-live-common-interface</module>
-        <module>yvbao-live-framework</module>
-        <module>yvbao-live-id-generate-interface</module>
-        <module>yvbao-live-id-generate-provider</module>
+        <module>yubao-live-user-interface</module>
+        <module>yubao-live-user-provider</module>
+        <module>yubao-live-api</module>
+        <module>yubao-live-common-interface</module>
+        <module>yubao-live-framework</module>
+        <module>yubao-live-id-generate-interface</module>
+        <module>yubao-live-id-generate-provider</module>
+        <module>yubao-live-gateway</module>
     </modules>
 
     <!--<dependencies>
@@ -62,7 +63,7 @@
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>${yvbao-mysql.version}</version>
+                <version>${yubao-mysql.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
@@ -73,6 +74,17 @@
                 <groupId>org.apache.shardingsphere</groupId>
                 <artifactId>shardingsphere-jdbc-core</artifactId>
                 <version>${sharding.jdbc.version}</version>
+            </dependency>
+            <!-- Nacos Config & Discovery Starter -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

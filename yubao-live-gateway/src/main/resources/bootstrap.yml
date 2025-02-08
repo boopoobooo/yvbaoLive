@@ -1,0 +1,25 @@
+server:
+  port: 80
+spring:
+  application:
+    name: yubao-live-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        import-check:
+          enabled: false
+        # 当前服务启动后去nacos中读取配置文件的后缀
+        file-extension: yaml
+        # 读取配置的nacos地址
+        server-addr: localhost:8848
+  config:
+    import:
+      - optional:nacos:yubao-live-gateway.yaml
+
+# 日志
+logging:
+  level:
+    root: info
+  config: classpath:logback-spring.xml

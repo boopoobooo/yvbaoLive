@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.junbao.yubao.live.user.provider.dao.mapper.IUserTagMapper">
+
+    <resultMap id="dataMap" type="cn.junbao.yubao.live.user.provider.dao.po.UserTagPO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="tag_info_01" property="tagInfo01"/>
+        <result column="tag_info_02" property="tagInfo02"/>
+        <result column="tag_info_03" property="tagInfo03"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="java.lang.Long">
+        INSERT INTO user_tag (
+            user_id,
+            tag_info_01, tag_info_02, tag_info_03,
+            create_time, update_time
+        ) VALUES (
+                     #{userId},
+                     0, 0, 0,
+                     now(), now()
+                 );
+    </insert>
+
+    <update id="setTag" >
+        update user_tag
+        set ${fieldName} = ${fieldName} | #{tag}
+        where user_id = #{userId} and ${fieldName} &amp; #{tag} = 0
+    </update>
+    <update id="cancelTag">
+        update user_tag
+        set ${fieldName} = ${fieldName} &amp; ~#{tag}
+        where user_id = #{userId} and ${fieldName} | #{tag} = #{tag}
+    </update>
+    <select id="selectByUserId" resultMap="dataMap">
+        select * from user_tag where user_id = #{userId}
+    </select>
+
+
+</mapper>

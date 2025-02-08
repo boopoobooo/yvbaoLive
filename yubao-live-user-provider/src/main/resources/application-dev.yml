@@ -1,0 +1,61 @@
+#server:
+#  port: 8081
+#  tomcat:
+#    mbeanregistry:
+#      enabled: true
+#    max-connections: 200
+#    threads:
+#      max: 150        # 设定处理客户请求的线程的最大数目，决定了服务器可以同时响应客户请求的数,默认200
+#      min-spare: 50   # 初始化线程数,最小空闲线程数,默认是10
+#    accept-count: 10  # 等待队列长度
+#
+## 应用配置
+#app:
+#  config:
+#    # 版本，方便通过接口版本升级
+#    api-version: v1
+#    # 跨域，开发阶段可以设置为 * 不限制
+#    cross-origin: '*'
+#
+#spring:
+#  datasource:
+#    driver-class-name: org.apache.shardingsphere.driver.ShardingSphereDriver
+#    url: jdbc:shardingsphere:classpath:yubao-db-sharding.yaml
+#    hikari:
+#      pool-name: yubao-user-pool
+#      minimum-idle: 15
+#      maximum-pool-size: 300
+#      connection-timeout: 4000
+#      max-lifetime: 60000
+#  data:
+#    redis:
+#      port: 16379
+#      host: 1.94.50.144
+#      lettuce:
+#        pool:
+#          min-idle: 10
+#          max-active: 50
+#          max-idle: 20
+#      password: 0.123
+#
+#
+#dubbo:
+#  application:
+#    logger: slf4j
+#    name: yubao-live-user-provider
+#  registry:
+#    address: nacos://localhost:8848
+#    register-mode: instance
+#  protocol:
+#    name: tri
+#    port: 50051
+#
+#mybatis:
+#  mapper-locations: classpath:/mybatis/mapper/*.xml
+#  config-location:  classpath:/mybatis/config/mybatis-config.xml
+#
+## 日志
+#logging:
+#  level:
+#    root: info
+#  config: classpath:logback-spring.xml
