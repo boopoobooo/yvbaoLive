@@ -1,0 +1,105 @@
+package cn.junbao.yubao.live.msg.provider.service.impl;
+
+import cn.junbao.yubao.live.framework.redis.starter.key.MsgProviderCacheKeyBuilder;
+import cn.junbao.yubao.live.msg.dto.MsgCheckDTO;
+import cn.junbao.yubao.live.msg.enums.MsgSendResultEnum;
+import cn.junbao.yubao.live.msg.provider.config.ThreadPoolManager;
+import cn.junbao.yubao.live.msg.provider.dao.mapper.ISmsMapper;
+import cn.junbao.yubao.live.msg.provider.dao.po.SmsPO;
+import cn.junbao.yubao.live.msg.provider.service.ISmsService;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
+
+@Service
+@Slf4j
+public class SmsServiceImpl implements ISmsService {
+    @Resource
+    private ISmsMapper smsMapper;
+
+    @Autowired
+    private MsgProviderCacheKeyBuilder msgProviderCacheKeyBuilder;
+    @Resource
+    private RedisTemplate<String,String> redisTemplate;
+
+    @Override
+    public MsgSendResultEnum sendLoginCode(String phone) {
+        //1. 基础校验
+        if (StringUtils.isBlank(phone)){
+            return MsgSendResultEnum.MSG_PARAM_ERROR;
+        }
+        //2. 校验手机号是否频繁验证
+        String cacheKey = msgProviderCacheKeyBuilder.buildSmsLoginKey(phone);
+        Boolean hasKey = redisTemplate.hasKey(cacheKey);
+        if (hasKey){
+            log.warn("[sendLoginCode] 当前手机号验证频繁，phone = {}",phone);
+            return MsgSendResultEnum.SEND_FAIL;
+        }
+        //3. 生成验证码
+        String loginCode = RandomStringUtils.randomNumeric(6);
+        redisTemplate.opsForValue().set(cacheKey,loginCode,60, TimeUnit.SECONDS);
+        log.info("cacheCode =  {}",redisTemplate.opsForValue().get(cacheKey));
+
+        //异步调用短信服务，发送短信
+        ThreadPoolManager.commonAsyncThreadPool.execute(()->{
+            //发送短信
+            sendMockSms(phone,loginCode);
+            //插入数据库
+            insertOne(phone,loginCode);
+        });
+
+        return MsgSendResultEnum.SEND_SUCCESS;
+    }
+
+
+    @Override
+    public MsgCheckDTO checkLoginCode(String phone, String code) {
+        if (StringUtils.isBlank(phone)||code == null || code.length() < 6){
+            return new MsgCheckDTO(false,MsgSendResultEnum.MSG_PARAM_ERROR.getDesc());
+        }
+
+        String cacheKey = msgProviderCacheKeyBuilder.buildSmsLoginKey(phone);
+        String cacheLoginCode = redisTemplate.opsForValue().get(cacheKey);
+        if (cacheLoginCode == null ) {
+            log.warn("校验验证码失败， 当前手机号验证码已过期:{},code ={} ",phone,code);
+            return new MsgCheckDTO(false,"当前手机号验证码已过期");
+        }
+        if (cacheLoginCode.equals(code)){
+            return new MsgCheckDTO(true,"验证成功");
+        }
+
+        return new MsgCheckDTO(false,"验证失败");
+    }
+
+    /**
+     * 模拟的短信服务， 后续将进行 第三方短信对接
+     * @param phone
+     * @param loginCode
+     * @return
+     */
+    private boolean sendMockSms(String phone,String loginCode){
+        //模拟发送短信服务
+        try {
+            log.info(" ============= 创建短信发送通道中 ============= ,phone is {},code is {}", phone, loginCode);
+            Thread.sleep(1000);
+            log.info(" ============= 短信已经发送成功 ============= ");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
+
+
+    private void insertOne(String phone, String  loginCode){
+        SmsPO smsPO = new SmsPO();
+        smsPO.setPhone(phone);
+        smsPO.setCode(loginCode);
+        smsMapper.insertOne(smsPO);
+    }
+}

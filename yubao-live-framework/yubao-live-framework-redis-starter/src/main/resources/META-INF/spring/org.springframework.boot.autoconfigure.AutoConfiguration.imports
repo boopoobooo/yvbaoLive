@@ -1,2 +1,3 @@
 cn.junbao.yubao.live.framework.redis.starter.config.RedisConfig
 cn.junbao.yubao.live.framework.redis.starter.key.UserProviderCacheKeyBuilder
+cn.junbao.yubao.live.framework.redis.starter.key.MsgProviderCacheKeyBuilder

@@ -14,7 +14,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dubbo.version>3.3.0</dubbo.version>
         <spring-boot.version>3.3.1</spring-boot.version>
-        <yubao-mysql.version>8.0.28</yubao-mysql.version>
+        <yubao-mysql.version>8.3.0</yubao-mysql.version>
         <spring-cloud-boostrap.version>3.1.5</spring-cloud-boostrap.version>
         <spring-cloud-alibaba.version>2023.0.1.2</spring-cloud-alibaba.version>
         <sharding.jdbc.version>5.4.1</sharding.jdbc.version>
@@ -29,6 +29,8 @@
         <module>yubao-live-id-generate-interface</module>
         <module>yubao-live-id-generate-provider</module>
         <module>yubao-live-gateway</module>
+        <module>yubao-live-msg-interface</module>
+        <module>yubao-live-msg-provider</module>
     </modules>
 
     <!--<dependencies>
@@ -61,8 +63,8 @@
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
                 <version>${yubao-mysql.version}</version>
             </dependency>
             <dependency>
