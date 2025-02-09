@@ -1,3 +1,8 @@
+/**
+ * delete by junbao   0209 2025
+ * shardingjdbc升级到 5.5.1  移除了ShardingSphereURLProvider类
+ */
+/*
 package cn.junbao.yubao.live.framework.datasource.starter.config;
 
 import com.alibaba.nacos.api.NacosFactory;
@@ -20,12 +25,13 @@ public class NacosDriverURLProvider implements ShardingSphereURLProvider {
         return !Strings.isNullOrEmpty(url)&& url.contains(NACOS_TYPE);
     }
 
-    /**
+*
      * 从url中获取到nacos的连接配置信息
      *
      * url=jdbc:shardingsphere:nacos:localhost:8848/yubao-live-user-shardingjdbc.yaml?username=nacos&&password=nacos&&namespace=public
      * urlPrefix= jdbc:shardingsphere:
-     */
+
+
     @Override
     public byte[] getContent(String url, String urlPrefix) {
         if (Strings.isNullOrEmpty(url)) {
@@ -80,7 +86,7 @@ public class NacosDriverURLProvider implements ShardingSphereURLProvider {
 
     }///
 
-    /*public static void main(String[] args) throws NacosException {
+public static void main(String[] args) throws NacosException {
         //初始化配置中心的Nacos Java SDK
         String serverAddr = "localhost:8848";
         Properties properties = new Properties();
@@ -92,5 +98,7 @@ public class NacosDriverURLProvider implements ShardingSphereURLProvider {
         ConfigService configService = NacosFactory.createConfigService(properties);
         String config = configService.getConfig("yubao-live-user-shardingjdbc.yaml", GROUP, 6000);
         System.out.println(config);
-    }*/
+    }
+
 }
+*/

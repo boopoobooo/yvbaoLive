@@ -1,52 +1,58 @@
-#dataSources:
-#  user_master:  ##新表，重建的分表
-#    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    jdbcUrl: jdbc:mysql://1.94.50.144:13306/yubao_live_user?useUnicode=true&characterEncoding=utf8
-#    username: root
-#    password: 0.123
-#
-#  user_slave0: ##新表，重建的分表
-#    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    jdbcUrl: jdbc:mysql://1.94.50.144:13307/yubao_live_user?useUnicode=true&characterEncoding=utf8
-#    username: root
-#    password: 0.123
-#
-#rules:
-#  - !READWRITE_SPLITTING
-#    dataSources:
-#      user_ds:
-#        writeDataSourceName: user_master
-#        readDataSourceNames:
-#          - user_slave0
-#  - !SINGLE
-#    defaultDataSource: user_ds ## 不分表分分库的默认数据源
-#  - !SHARDING
-#    tables:
-#      user:
-#        actualDataNodes: user_ds.user_${(0..3).collect(){it.toString().padLeft(2,'0')}}
-#        tableStrategy:
-#          standard:
-#            shardingColumn: user_id
-#            shardingAlgorithmName: user-inline
-#
-#      user_tag:
-#        actualDataNodes: user_ds.user_tag_${(0..3).collect(){it.toString().padLeft(2,'0')}}
-#        tableStrategy:
-#          standard:
-#            shardingColumn: user_id
-#            shardingAlgorithmName: user_tag-inline
-#
-#    shardingAlgorithms:
-#      user-inline:
-#        type: INLINE
-#        props:
-#          algorithm-expression: user_${(user_id % 4).toString().padLeft(2,'0')}
-#      user_tag-inline:
-#        type: INLINE
-#        props:
-#          algorithm-expression: user_tag_${(user_id % 4).toString().padLeft(2,'0')}
-#
-#props:
-#  sql-show: true
+mode:
+  type: Standalone
+  repository:
+    type: JDBC
+
+
+dataSources:
+  user_master:  ##新表，重建的分表
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://1.94.50.144:13306/yubao_live_user?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=true
+    username: root
+    password: 0.123
+
+  user_slave0: ##新表，重建的分表
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://1.94.50.144:13307/yubao_live_user?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=true
+    username: root
+    password: 0.123
+
+rules:
+  - !READWRITE_SPLITTING
+    dataSourceGroups:
+      user_ds:
+        writeDataSourceName: user_master
+        readDataSourceNames:
+          - user_slave0
+  - !SINGLE
+    defaultDataSource: user_ds ## 不分表分分库的默认数据源
+  - !SHARDING
+    tables:
+      user:
+        actualDataNodes: user_ds.user_${(0..3).collect(){it.toString().padLeft(2,'0')}}
+        tableStrategy:
+          standard:
+            shardingColumn: user_id
+            shardingAlgorithmName: user-inline
+
+      user_tag:
+        actualDataNodes: user_ds.user_tag_${(0..3).collect(){it.toString().padLeft(2,'0')}}
+        tableStrategy:
+          standard:
+            shardingColumn: user_id
+            shardingAlgorithmName: user_tag-inline
+
+    shardingAlgorithms:
+      user-inline:
+        type: INLINE
+        props:
+          algorithm-expression: user_${(user_id % 4).toString().padLeft(2,'0')}
+      user_tag-inline:
+        type: INLINE
+        props:
+          algorithm-expression: user_tag_${(user_id % 4).toString().padLeft(2,'0')}
+
+props:
+  sql-show: true
