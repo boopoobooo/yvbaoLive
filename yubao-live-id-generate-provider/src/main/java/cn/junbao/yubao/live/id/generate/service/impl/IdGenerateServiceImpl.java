@@ -9,6 +9,7 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Service
 public class IdGenerateServiceImpl implements IdGenerateService, InitializingBean {
 
     private static final Logger log = LoggerFactory.getLogger(IdGenerateServiceImpl.class);
@@ -81,7 +83,7 @@ public class IdGenerateServiceImpl implements IdGenerateService, InitializingBea
     }
 
     /**
-     * 更新扩容当前的 有序id序列 // todo 数据库库表建立 + 方法测试   1/10  18:21
+     * 更新扩容当前的 有序id序列
      * @param localSeqIdBO
      */
     private void refreshLocalSeqId(LocalSeqIdBO localSeqIdBO) {
@@ -94,7 +96,7 @@ public class IdGenerateServiceImpl implements IdGenerateService, InitializingBea
 
             boolean acquireStatus = semaphore.tryAcquire();
             if (acquireStatus){
-                log.info("[refreshLocalSeqId] 开始进行本地id段的同步操作");
+                log.info("[refreshLocalSeqId] 开始进行本地有序id段的同步操作");
                 threadPoolExecutor.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -132,6 +134,7 @@ public class IdGenerateServiceImpl implements IdGenerateService, InitializingBea
             }
             boolean acquireStatus = semaphore.tryAcquire();
             if (acquireStatus) {
+                log.info("[refreshLocalUnSeqId] 开始进行本地无序id段的同步操作");
                 threadPoolExecutor.execute(new Runnable() {
                     @Override
                     public void run() {

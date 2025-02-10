@@ -2,6 +2,7 @@ package cn.junbao.yubao.live.user.provider.service.impl;
 
 import cn.junbao.yubao.live.common.interfaces.utils.ConvertBeanUtils;
 import cn.junbao.yubao.live.framework.redis.starter.key.UserProviderCacheKeyBuilder;
+import cn.junbao.yubao.live.framework.redis.starter.service.IRedisService;
 import cn.junbao.yubao.live.user.dto.UserDTO;
 import cn.junbao.yubao.live.user.provider.dao.mapper.IUserMapper;
 import cn.junbao.yubao.live.user.provider.dao.po.UserPO;

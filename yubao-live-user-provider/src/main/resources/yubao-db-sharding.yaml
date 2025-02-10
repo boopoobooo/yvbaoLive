@@ -44,6 +44,13 @@ rules:
             shardingColumn: user_id
             shardingAlgorithmName: user_tag-inline
 
+      user_phone:
+        actualDataNodes: user_ds.user_phone_${(0..3).collect(){it.toString().padLeft(2,'0')}}
+        tableStrategy:
+          standard:
+            shardingColumn: user_id
+            shardingAlgorithmName: user_phone-inline
+
     shardingAlgorithms:
       user-inline:
         type: INLINE
@@ -53,6 +60,10 @@ rules:
         type: INLINE
         props:
           algorithm-expression: user_tag_${(user_id % 4).toString().padLeft(2,'0')}
+      user_phone-inline:
+        type: INLINE
+        props:
+          algorithm-expression: user_phone_${(user_id % 4).toString().padLeft(2,'0')}
 
 props:
   sql-show: true

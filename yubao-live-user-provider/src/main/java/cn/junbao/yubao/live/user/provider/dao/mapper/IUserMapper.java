@@ -11,4 +11,6 @@ public interface IUserMapper {
     UserPO getUserById(Long userId);
 
     List<UserPO> getBatchByUserIds(@Param("userIds") List<Long> userIds);
+
+    void insertOne(UserPO userPO);
 }

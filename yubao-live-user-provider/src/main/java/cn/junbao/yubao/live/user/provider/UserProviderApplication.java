@@ -1,6 +1,8 @@
 package cn.junbao.yubao.live.user.provider;
 
 import cn.junbao.yubao.live.user.constants.UserTagsEnum;
+import cn.junbao.yubao.live.user.dto.UserLoginDTO;
+import cn.junbao.yubao.live.user.provider.service.IUserPhoneService;
 import cn.junbao.yubao.live.user.provider.service.IUserTagService;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
@@ -9,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,21 +25,43 @@ public class UserProviderApplication implements CommandLineRunner {
 
     @Resource
     private IUserTagService userTagService;
+    @Resource
+    private IUserPhoneService userPhoneService;
+    @Resource
+    private RedisTemplate<String,Object> redisTemplate;
 
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(UserProviderApplication.class);
         springApplication.run(args);
     }
 
-
     @Override
     public void run(String... args) throws Exception {
-        long userId = 10041l;
-        /*System.out.println(userTagService.setTag(userId, UserTagsEnum.IS_VIP_USER));
-        System.out.println(userTagService.containTag(userId,UserTagsEnum.IS_VIP_USER));
-        System.out.println(userTagService.cancelTag(userId,UserTagsEnum.IS_VIP_USER));
-        System.out.println(userTagService.containTag(userId,UserTagsEnum.IS_VIP_USER));*/
+        String key = "test001";
+        UserLoginDTO userLoginDTO = new UserLoginDTO();
+        userLoginDTO.setUserId(100001L);
+        redisTemplate.opsForValue().set(key,userLoginDTO);
+        System.out.println("==================================");
+        UserLoginDTO obj = (UserLoginDTO) redisTemplate.opsForValue().get(key);
+        System.out.println("userId === "+obj.getUserId());
+        System.out.println("===============redis____test___====="+redisTemplate.opsForValue().get(key));
 
+
+        String phone = "15014988572";
+        UserLoginDTO loginDTO = userPhoneService.login(phone);
+        System.out.println("================loginDTO======================"+loginDTO);
+
+        System.out.println(userPhoneService.queryByPhone(phone));
+        System.out.println(userPhoneService.queryByPhone(phone));
+        System.out.println(userPhoneService.queryByUserId(loginDTO.getUserId()));
+        System.out.println(userPhoneService.queryByUserId(loginDTO.getUserId()));
+    }
+
+
+
+   /* @Override
+    public void run(String... args) throws Exception {
+        long userId = 10041l;
         userTagService.cancelTag(userId,UserTagsEnum.IS_VIP_USER);
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -71,5 +96,5 @@ public class UserProviderApplication implements CommandLineRunner {
 
         Thread.sleep(10000);
         System.out.println(userTagService.containTag(userId, UserTagsEnum.IS_VIP_USER));
-    }
+    }*/
 }

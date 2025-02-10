@@ -16,7 +16,7 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
     <update id="updateNewIdCountAndVersion">
-        update t_id_generate_config
+        update id_generate_config
         set next_threshold = next_threshold+step,
             current_start = current_start+step,
             version=version + 1
@@ -24,12 +24,12 @@
     </update>
 
     <select id="selectById" resultMap="dataMap">
-        select * from t_id_generate_config
+        select * from id_generate_config
         where id = #{id}
     </select>
 
     <select id="selectAll" resultMap="dataMap">
-        select * from t_id_generate_config
+        select * from id_generate_config
     </select>
 
 
