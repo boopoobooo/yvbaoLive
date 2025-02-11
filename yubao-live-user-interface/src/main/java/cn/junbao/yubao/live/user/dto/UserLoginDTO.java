@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -23,6 +24,8 @@ public class UserLoginDTO implements Serializable {
         UserLoginDTO userLoginDTO = new UserLoginDTO();
         userLoginDTO.setLoginSucces(true);
         userLoginDTO.setUserId(userId);
+        userLoginDTO.setToken(UUID.randomUUID().toString());
+        userLoginDTO.setPhone(phone);
         return userLoginDTO;
     }
     public static UserLoginDTO loginError(String desc) {

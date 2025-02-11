@@ -54,7 +54,7 @@ public class UserPhoneServiceImpl implements IUserPhoneService {
         //已注册，则 生成token，存入缓存，返回对象
         if (userPhoneDTO != null) {
             log.info("[login]用户已注册，登录成功");
-            return UserLoginDTO.loginSuccess(userPhoneDTO.getUserId(),null);
+            return UserLoginDTO.loginSuccess(userPhoneDTO.getUserId(),phone);
         }
 
         //未注册，创建对象， 插入数据库，生成token，存入缓存，返回
