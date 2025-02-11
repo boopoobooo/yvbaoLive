@@ -25,7 +25,7 @@ public class MsgProviderApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String phone = "15014677890";
+        String phone = "13878594448";
         smsService.sendLoginCode(phone );
         Scanner sc = new Scanner(System.in);
         System.out.println("请输入：");

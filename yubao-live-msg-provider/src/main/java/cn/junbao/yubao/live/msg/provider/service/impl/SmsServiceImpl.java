@@ -3,10 +3,11 @@ package cn.junbao.yubao.live.msg.provider.service.impl;
 import cn.junbao.yubao.live.framework.redis.starter.key.MsgProviderCacheKeyBuilder;
 import cn.junbao.yubao.live.msg.dto.MsgCheckDTO;
 import cn.junbao.yubao.live.msg.enums.MsgSendResultEnum;
-import cn.junbao.yubao.live.msg.provider.config.ThreadPoolManager;
+import cn.junbao.yubao.live.msg.provider.config.AliyunSmsProperties;
 import cn.junbao.yubao.live.msg.provider.dao.mapper.ISmsMapper;
 import cn.junbao.yubao.live.msg.provider.dao.po.SmsPO;
 import cn.junbao.yubao.live.msg.provider.service.ISmsService;
+import cn.junbao.yubao.live.msg.provider.utils.AliyunSmsUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -26,7 +27,11 @@ public class SmsServiceImpl implements ISmsService {
     @Autowired
     private MsgProviderCacheKeyBuilder msgProviderCacheKeyBuilder;
     @Resource
+    private AliyunSmsProperties aliyunSmsProperties;
+    @Resource
     private RedisTemplate<String,String> redisTemplate;
+    @Resource
+    private AliyunSmsUtil aliyunSmsUtil;
 
     @Override
     public MsgSendResultEnum sendLoginCode(String phone) {
@@ -44,19 +49,18 @@ public class SmsServiceImpl implements ISmsService {
         //3. 生成验证码
         String loginCode = RandomStringUtils.randomNumeric(6);
         redisTemplate.opsForValue().set(cacheKey,loginCode,60, TimeUnit.SECONDS);
-        log.info("cacheCode =  {}",redisTemplate.opsForValue().get(cacheKey));
+        log.info("[sendLoginCode] cacheCode =  {}",redisTemplate.opsForValue().get(cacheKey));
 
-        //异步调用短信服务，发送短信
-        ThreadPoolManager.commonAsyncThreadPool.execute(()->{
-            //发送短信
-            sendMockSms(phone,loginCode);
-            //插入数据库
-            insertOne(phone,loginCode);
-        });
+        //发送验证码
+        //sendMockSms(phone,loginCode);
+        boolean sendSmsStatus = aliyunSmsUtil.sendAliyunSms(aliyunSmsProperties.getTemplateCode(), phone, loginCode);
+        //插入数据库
+        if (sendSmsStatus){
+            insertOne(phone,loginCode);//插入短信记录
+        }
 
         return MsgSendResultEnum.SEND_SUCCESS;
     }
-
 
     @Override
     public MsgCheckDTO checkLoginCode(String phone, String code) {
@@ -79,10 +83,9 @@ public class SmsServiceImpl implements ISmsService {
 
     /**
      * 模拟的短信服务， 后续将进行 第三方短信对接
-     * @param phone
-     * @param loginCode
-     * @return
+     *  @Deprecated： 完成aliyun-sms服务对接， 使用aliyunSmsUtil
      */
+    @Deprecated
     private boolean sendMockSms(String phone,String loginCode){
         //模拟发送短信服务
         try {
