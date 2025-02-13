@@ -51,12 +51,19 @@ public class SmsServiceImpl implements ISmsService {
         redisTemplate.opsForValue().set(cacheKey,loginCode,60, TimeUnit.SECONDS);
         log.info("[sendLoginCode] cacheCode =  {}",redisTemplate.opsForValue().get(cacheKey));
 
-        //发送验证码
-        //sendMockSms(phone,loginCode);
-        boolean sendSmsStatus = aliyunSmsUtil.sendAliyunSms(aliyunSmsProperties.getTemplateCode(), phone, loginCode);
-        //插入数据库
-        if (sendSmsStatus){
-            insertOne(phone,loginCode);//插入短信记录
+        try {
+            //发送验证码
+            //sendMockSms(phone,loginCode);
+            boolean sendSmsStatus = aliyunSmsUtil.sendAliyunSms(aliyunSmsProperties.getTemplateCode(), phone, loginCode);
+            //插入数据库
+            if (sendSmsStatus){
+                insertOne(phone,loginCode);//插入短信记录
+            }
+        } catch (Exception e) {
+            log.error("[sendLoginCode]ERROR:"+e);
+            throw new RuntimeException(e);
+        }finally {
+            aliyunSmsUtil.close();
         }
 
         return MsgSendResultEnum.SEND_SUCCESS;
