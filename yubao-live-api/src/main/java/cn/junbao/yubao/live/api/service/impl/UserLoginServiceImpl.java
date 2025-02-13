@@ -1,7 +1,9 @@
 package cn.junbao.yubao.live.api.service.impl;
 
+import cn.junbao.yubao.live.account.interfaces.rpc.IAccountTokenRpc;
 import cn.junbao.yubao.live.api.service.IUserLoginService;
 import cn.junbao.yubao.live.api.vo.UserLoginVO;
+import cn.junbao.yubao.live.common.interfaces.enums.WebRequestEnum;
 import cn.junbao.yubao.live.common.interfaces.utils.ConvertBeanUtils;
 import cn.junbao.yubao.live.common.interfaces.vo.WebResponseVO;
 import cn.junbao.yubao.live.msg.dto.MsgCheckDTO;
@@ -20,11 +22,13 @@ import java.util.regex.Pattern;
 @Service
 public class UserLoginServiceImpl implements IUserLoginService {
 
-    private static String PHONE_REG = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$";
+    private static final String PHONE_REG = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$";
     @DubboReference
     private ISmsRpc smsRpc ;
     @DubboReference
     private IUserPhoneRpc userPhoneRpc;
+    @DubboReference
+    private IAccountTokenRpc accountTokenRpc;
 
     @Override
     public WebResponseVO sendLoginCode(String phone) {
@@ -60,13 +64,22 @@ public class UserLoginServiceImpl implements IUserLoginService {
         }
         //验证码校验通过
         UserLoginDTO userLoginDTO = userPhoneRpc.login(phone);
-        Cookie cookie = new Cookie("yubao_token", userLoginDTO.getToken());
-        //设置顶级域名，接着我们的二级域名中进行web页面的访问，后续请求就会携带上它了
+        //生成token
+        String loginToken = accountTokenRpc.createAndSaveToken(userLoginDTO.getUserId());
+        this.saveTokenInCookie(loginToken,response);
+
+        return WebResponseVO.success(ConvertBeanUtils.convert(userLoginDTO, UserLoginVO.class));
+    }
+
+    /**
+     * 在cookie中保存登录token
+     */
+    private void saveTokenInCookie(String loginToken,HttpServletResponse response){
+        Cookie cookie = new Cookie(WebRequestEnum.COOKIE_TOKEN_NAME.getName(), loginToken);
+        //设置顶级域名，接着我们的二级域名中进行web页面的访问，后续请求就会携带上token
         cookie.setDomain("yubao.live.com");
         cookie.setPath("/");
         cookie.setMaxAge(30 * 24 * 3600);
-        response.setHeader("Access-Control-Allow-Credentials", "true");
         response.addCookie(cookie);
-        return WebResponseVO.success(ConvertBeanUtils.convert(userLoginDTO, UserLoginVO.class));
     }
 }

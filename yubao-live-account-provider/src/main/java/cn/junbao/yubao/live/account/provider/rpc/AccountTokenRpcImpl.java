@@ -1,12 +1,12 @@
 package cn.junbao.yubao.live.account.provider.rpc;
 
-import cn.junbao.yubao.live.account.interfaces.rpc.IAccountTokenRPC;
+import cn.junbao.yubao.live.account.interfaces.rpc.IAccountTokenRpc;
 import cn.junbao.yubao.live.account.provider.service.IAccountTokenService;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
 
 @DubboService
-public class AccountTokenRpcImpl implements IAccountTokenRPC {
+public class AccountTokenRpcImpl implements IAccountTokenRpc {
 
     @Resource
     private IAccountTokenService accountTokenService;

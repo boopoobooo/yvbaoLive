@@ -33,6 +33,7 @@
         <module>yubao-live-msg-provider</module>
         <module>yubao-live-account-interfaces</module>
         <module>yubao-live-account-provider</module>
+        <module>yubao-live-framework/yubao-live-framework-web-starter</module>
     </modules>
 
     <!--<dependencies>

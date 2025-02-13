@@ -16,7 +16,6 @@ public class UserLoginDTO implements Serializable {
     private static final long serialVersionUID = 7516137443387758078L;
     private Long userId;
     private String phone ;
-    private String token;
     private boolean loginSucces;
     private String desc;
 
@@ -24,7 +23,6 @@ public class UserLoginDTO implements Serializable {
         UserLoginDTO userLoginDTO = new UserLoginDTO();
         userLoginDTO.setLoginSucces(true);
         userLoginDTO.setUserId(userId);
-        userLoginDTO.setToken(UUID.randomUUID().toString());
         userLoginDTO.setPhone(phone);
         return userLoginDTO;
     }

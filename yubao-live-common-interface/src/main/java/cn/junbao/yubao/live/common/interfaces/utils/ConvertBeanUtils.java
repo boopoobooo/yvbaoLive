@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Author idea
- * @Date: Created in 16:06 2023/5/7
- * @Description
+ * 用于类对象转换
  */
 public class ConvertBeanUtils {
 

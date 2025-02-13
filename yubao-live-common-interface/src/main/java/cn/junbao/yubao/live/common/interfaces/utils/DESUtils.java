@@ -12,6 +12,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
+/**
+ * 加密工具类： 用于敏感信息加密
+ */
 public class DESUtils {
 
     // 算法名称
