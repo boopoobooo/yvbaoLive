@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -27,7 +28,7 @@ public class AccountTokenServiceImpl implements IAccountTokenService {
         }
         String token = UUID.randomUUID().toString();
         String cacheKey = accountProviderCacheKeyBuilder.buildAccountTokenKey(token);
-        redisTemplate.opsForValue().set(cacheKey, String.valueOf(userId));
+        redisTemplate.opsForValue().set(cacheKey, String.valueOf(userId),15, TimeUnit.DAYS);
 
         return token;
     }
