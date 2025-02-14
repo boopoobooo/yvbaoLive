@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.junbao</groupId>
+        <artifactId>yubao-live</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>yubao-live-im-core-server</artifactId>
+    <description>基于netty构建的im服务</description>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <netty-all.version>4.1.118.Final</netty-all.version>
+        <alibaba-fastjson.version>2.0.28</alibaba-fastjson.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>${netty-all.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${alibaba-fastjson.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fastjson2</artifactId>
+                    <groupId>com.alibaba.fastjson2</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>${dubbo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+            <version>${spring-cloud-bootstrap.version}</version>
+        </dependency>
+        <!-- Nacos Config & Discovery Starter -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>${spring-cloud-alibaba.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+            <version>${spring-cloud-alibaba.version}</version>
+        </dependency>
+
+        <!--工程项目-->
+        <dependency>
+            <groupId>cn.junbao</groupId>
+            <artifactId>yubao-live-im-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.junbao</groupId>
+            <artifactId>yubao-live-framework-redis-starter</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>
