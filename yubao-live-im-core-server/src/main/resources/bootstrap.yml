@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: yubao-live-im-core-server # 服务名称
+  profiles:
+    active: dev # 当前使用dev环境
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml
+        group: DEFAULT_GROUP # 可选，默认是 DEFAULT_GROUP
+        grpcTslConfig:
+          enableTls: false
+          trustAll: true
+  config:
+    import:
+      - optional:nacos:yubao-live-im-core-server-dev.yaml

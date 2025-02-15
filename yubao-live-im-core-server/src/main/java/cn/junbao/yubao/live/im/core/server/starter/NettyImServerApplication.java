@@ -1,4 +1,4 @@
-package cn.junbao.yubao.live.im.core.server;
+package cn.junbao.yubao.live.im.core.server.starter;
 
 import cn.junbao.yubao.live.im.core.server.common.ImMsgDecoder;
 import cn.junbao.yubao.live.im.core.server.common.ImMsgEncoder;
@@ -8,16 +8,30 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.sctp.nio.NioSctpServerChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import jakarta.annotation.Resource;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Configuration;
 
-@Data
 @Slf4j
-public class NettyImServerApplication {
+@Configuration
+public class NettyImServerApplication implements InitializingBean {
     //指定端口
     private int port;
+
+    @Resource
+    private ImServerCoreHandler imServerCoreHandler;
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
     //基于netty启动java进程
     public void startApplication(int port) throws InterruptedException {
         setPort(port);
@@ -37,7 +51,7 @@ public class NettyImServerApplication {
                 channel.pipeline().addLast(new ImMsgEncoder());
                 channel.pipeline().addLast(new ImMsgDecoder());
                 //添加消息处理器
-                channel.pipeline().addLast(new ImServerCoreHandler());
+                channel.pipeline().addLast(imServerCoreHandler);
             }
         });
         //基于jvm钩子函数实现优雅关闭效果
@@ -52,9 +66,22 @@ public class NettyImServerApplication {
 
     }
 
-    public static void main(String[] args) throws InterruptedException {
+   /* public static void main(String[] args) throws InterruptedException {
         NettyImServerApplication nettyImServerApplication = new NettyImServerApplication();
         nettyImServerApplication.startApplication(9090);
-    }
+    }*/
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Thread nettyImServerThread = new Thread(()->{
+            try {
+                startApplication(9090);
+            } catch (InterruptedException e) {
+                log.error("ERROR: "+ e);
+                throw new RuntimeException(e);
+            }
+        });
+        nettyImServerThread.setName("yubao-live-im-core-NettyCoreThread");
+        nettyImServerThread.start();
+    }
 }

@@ -1,4 +1,4 @@
-package cn.junbao.yubao.live.im.common;
+package cn.junbao.yubao.live.im.constants;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

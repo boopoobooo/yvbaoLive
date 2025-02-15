@@ -1,9 +1,11 @@
 package cn.junbao.yubao.live.im.core.server.common;
 
-import cn.junbao.yubao.live.im.common.ImConstants;
+import cn.junbao.yubao.live.im.constants.ImConstants;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Arrays;
 
 @Data
 @AllArgsConstructor
@@ -25,5 +27,15 @@ public class ImMsg {
         imMsg.setBody(body.getBytes());
         imMsg.setLength(body.getBytes().length);
         return imMsg;
+    }
+
+    @Override
+    public String toString() {
+        return "ImMsg{" +
+                "magic=" + magic +
+                ", code=" + code +
+                ", length=" + length +
+                ", body=" + new String(body) +
+                '}';
     }
 }

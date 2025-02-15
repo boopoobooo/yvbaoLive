@@ -36,6 +36,7 @@
         <module>yubao-live-framework/yubao-live-framework-web-starter</module>
         <module>yubao-live-im-core-server</module>
         <module>yubao-live-im-interface</module>
+        <module>yubao-live-im-provider</module>
     </modules>
 
     <!--<dependencies>

@@ -7,10 +7,13 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Slf4j
+@Service
 public class ImServerCoreHandler extends SimpleChannelInboundHandler {
-    private ImHandlerFactory imHandlerFactory = new ImHandlerFactoryImpl();
+    @Resource
+    private ImHandlerFactory imHandlerFactory ;
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Object msg) throws Exception {
 

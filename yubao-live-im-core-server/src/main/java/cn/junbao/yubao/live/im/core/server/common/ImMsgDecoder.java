@@ -1,6 +1,6 @@
 package cn.junbao.yubao.live.im.core.server.common;
 
-import cn.junbao.yubao.live.im.common.ImConstants;
+import cn.junbao.yubao.live.im.constants.ImConstants;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;

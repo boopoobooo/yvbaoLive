@@ -1,6 +1,5 @@
 package cn.junbao.yubao.live.user.provider;
 
-import cn.junbao.yubao.live.user.constants.UserTagsEnum;
 import cn.junbao.yubao.live.user.dto.UserLoginDTO;
 import cn.junbao.yubao.live.user.provider.service.IUserPhoneService;
 import cn.junbao.yubao.live.user.provider.service.IUserTagService;
@@ -12,10 +11,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.redis.core.RedisTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 @SpringBootApplication
 @EnableDubbo
