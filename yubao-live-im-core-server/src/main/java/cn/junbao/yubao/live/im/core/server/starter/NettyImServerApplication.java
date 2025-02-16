@@ -46,7 +46,7 @@ public class NettyImServerApplication implements InitializingBean {
         bootstrap.childHandler(new ChannelInitializer<>() {
             @Override
             protected void initChannel(Channel channel) throws Exception {
-                log.info("初始化连接渠道");
+                log.info("[NettyImServerApplication] 初始化连接渠道");
                 //添加消息编解码器
                 channel.pipeline().addLast(new ImMsgEncoder());
                 channel.pipeline().addLast(new ImMsgDecoder());

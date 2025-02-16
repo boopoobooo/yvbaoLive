@@ -15,10 +15,12 @@ public class LogoutMsgHandler implements ISimpleHandler {
     public void handler(ChannelHandlerContext channelHandlerContext, ImMsg msg) {
 
         Long userId = ImContextUtil.getUserId(channelHandlerContext);
-        if (userId == null ){
-            log.error("[LogoutMsgHandler登出消息]参数异常，userId is null ");
-            throw new IllegalArgumentException("userid is null !");
+        Integer appId = ImContextUtil.getAppId(channelHandlerContext);
+        if (userId == null || appId == null ){
+            log.error("[LogoutMsgHandler登出消息]参数异常，userId 或 appid 为 null, userId = {},appid = {}",userId,appId);
+            throw new IllegalArgumentException("参数异常，userId 或 appid 为 null !");
         }
+        //关闭连接
         ChannelHandlerContextHashMap.remove(userId);
         channelHandlerContext.close();
         log.info("[LogoutMsgHandler]用户登出,userId = {}",userId);

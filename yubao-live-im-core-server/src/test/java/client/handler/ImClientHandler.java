@@ -21,6 +21,9 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Slf4j
 @Service
 public class ImClientHandler implements InitializingBean {
@@ -47,16 +50,17 @@ public class ImClientHandler implements InitializingBean {
 
                     }
                 });
-                ChannelFuture channelFuture = null;
-                try {
-                    channelFuture = bootstrap.connect("localhost", 9090).sync();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                Channel channel = channelFuture.channel();
-                for (int i = 0; i < 50; i++) {
-                    Long userId = 1241243L;
-                    String token = imTokenRpc.createImLoginToken(userId, AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
+
+                Map<Long,Channel> userChannelMap = new HashMap<>();
+                for (int i = 1; i <= 1; i++) {
+                    Long userId = 20000L+i;
+                    String token = null;
+                    try {
+                        token = imTokenRpc.createImLoginToken(userId, AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
+                    } catch (Exception e) {
+                        log.error("[ERROR] e = "+e);
+                        throw new RuntimeException(e);
+                    }
                     log.info("rpc  token = {}",token);
                     ImMsgBody imMsgBody = new ImMsgBody();
                     imMsgBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
@@ -64,16 +68,53 @@ public class ImClientHandler implements InitializingBean {
                     imMsgBody.setToken(token);
                     imMsgBody.setData("login");
 
-                    channel.writeAndFlush(ImMsg.build(ImMsgTypeCode.IM_LOGIN_MSG.getCode(), JSON.toJSONString(imMsgBody)));
+                    ChannelFuture channelFuture = null;
                     try {
-                        Thread.sleep(10000);
-                        log.info("sleep end =======");
+                        channelFuture = bootstrap.connect("localhost", 9090).sync();
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
+                    Channel channel = channelFuture.channel();
+                    userChannelMap.put(userId,channel);
+
+                    channel.writeAndFlush(ImMsg.build(ImMsgTypeCode.IM_LOGIN_MSG.getCode(), JSON.toJSONString(imMsgBody)));
+
                 }
+
+                while (true){
+                    for (Long userIdInMap : userChannelMap.keySet()) {
+                        ImMsgBody reqBody = new ImMsgBody();
+                        reqBody.setUserId(userIdInMap);
+                        reqBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
+                        reqBody.setData("heartBeat");
+                        ImMsg imMsg = ImMsg.build(ImMsgTypeCode.IM_HEARTBEAT_MSG.getCode(), JSON.toJSONString(reqBody));
+                        userChannelMap.get(userIdInMap).writeAndFlush(imMsg);
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }//while
             }
         });
         thread.start();
     }//
+
+    private void sendHeartBeat(Long userId, Channel channel) {
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                ImMsgBody imMsgBody = new ImMsgBody();
+                imMsgBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
+                imMsgBody.setUserId(userId);
+                ImMsg loginMsg = ImMsg.build(ImMsgTypeCode.IM_HEARTBEAT_MSG.getCode(), JSON.toJSONString(imMsgBody));
+                channel.writeAndFlush(loginMsg);
+            }
+        }).start();
+    }
 }

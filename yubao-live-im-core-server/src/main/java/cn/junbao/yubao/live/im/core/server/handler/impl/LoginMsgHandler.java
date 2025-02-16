@@ -25,6 +25,12 @@ public class LoginMsgHandler implements ISimpleHandler {
     @Override
     public void handler(ChannelHandlerContext channelHandlerContext, ImMsg msg) {
 
+        //防止重复登录
+        if (ImContextUtil.getUserId(channelHandlerContext) != null ){
+            //重复登录，直接返回
+            return;
+        }
+
         byte[] msgBody = msg.getBody();
         if (msgBody == null || msgBody.length == 0 ){
             log.error("[LoginMsgHandler]参数异常，body is null ");
@@ -32,12 +38,13 @@ public class LoginMsgHandler implements ISimpleHandler {
         }
         ImMsgBody imMsgBody = JSON.parseObject(new String(msgBody), ImMsgBody.class);
         Long userIdFromMsg = imMsgBody.getUserId();
-        int appIdFromMsg = imMsgBody.getAppId();
+        Integer appIdFromMsg = imMsgBody.getAppId();
         String token = imMsgBody.getToken();
         if (StringUtils.isBlank(token) || (userIdFromMsg == null) || appIdFromMsg < 1000){
             log.error("[LoginMsgHandler]参数异常，当前参数： appId = {}, userId from msg = {}, token = {} ",appIdFromMsg,userIdFromMsg,token);
             throw new IllegalArgumentException("param is error !");
         }
+        //获取用户登录消息token
         Long userIdByToken = imTokenRpc.getUserIdByToken(imMsgBody.getToken());
         log.info("[LoginMsgHandler]  userIdByToken = {}, useridofMsg = {}",userIdByToken,imMsgBody.getUserId());
         if (userIdByToken != null && userIdByToken.equals(imMsgBody.getUserId())){
@@ -45,14 +52,16 @@ public class LoginMsgHandler implements ISimpleHandler {
             //将channelHandlerContext加入缓存
             ChannelHandlerContextHashMap.put(userIdByToken,channelHandlerContext);
             ImContextUtil.setUserId(channelHandlerContext,userIdByToken);
+            ImContextUtil.setAppId(channelHandlerContext,appIdFromMsg);
 
             ImMsgBody respBody = new ImMsgBody();
             respBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
             respBody.setUserId(userIdByToken);
-            respBody.setData("true");
+            respBody.setData("Login true");
             ImMsg respMsg = ImMsg.build(ImMsgTypeCode.IM_LOGIN_MSG.getCode(),JSON.toJSONString(respBody));
             log.info("[LoginMsgHandler]登录成功 userid = {} appid = {}",userIdByToken, appIdFromMsg);
             channelHandlerContext.writeAndFlush(respMsg);
+            return;
         }
         //token校验失败,断开连接
         channelHandlerContext.close();
