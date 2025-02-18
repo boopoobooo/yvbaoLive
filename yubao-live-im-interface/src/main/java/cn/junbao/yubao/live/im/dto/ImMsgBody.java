@@ -36,4 +36,14 @@ public class ImMsgBody implements Serializable {
      */
     private String data;
 
+    @Override
+    public String toString() {
+        return "ImMsgBody{" +
+                "appId=" + appId +
+                ", msgId='" + msgId + '\'' +
+                ", token='" + token + '\'' +
+                ", userId=" + userId +
+                ", data='" + String.valueOf(data) + '\'' +
+                '}';
+    }
 }

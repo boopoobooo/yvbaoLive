@@ -8,6 +8,7 @@ import cn.junbao.yubao.live.im.core.server.common.ImMsgEncoder;
 import cn.junbao.yubao.live.im.dto.ImMsgBody;
 import cn.junbao.yubao.live.im.interfaces.ImTokenRpc;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -53,7 +54,7 @@ public class ImClientHandler implements InitializingBean {
 
                 Map<Long,Channel> userChannelMap = new HashMap<>();
                 for (int i = 1; i <= 1; i++) {
-                    Long userId = 20000L+i;
+                    Long userId = 10000L+i;
                     String token = null;
                     try {
                         token = imTokenRpc.createImLoginToken(userId, AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
@@ -86,11 +87,14 @@ public class ImClientHandler implements InitializingBean {
                         ImMsgBody reqBody = new ImMsgBody();
                         reqBody.setUserId(userIdInMap);
                         reqBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
-                        reqBody.setData("heartBeat");
-                        ImMsg imMsg = ImMsg.build(ImMsgTypeCode.IM_HEARTBEAT_MSG.getCode(), JSON.toJSONString(reqBody));
+                        JSONObject jsonObject = new JSONObject();
+                        jsonObject.put("userid",userIdInMap);
+                        jsonObject.put("context","你好你好！！！！"+userIdInMap);
+                        reqBody.setData(String.valueOf(jsonObject));
+                        ImMsg imMsg = ImMsg.build(ImMsgTypeCode.IM_BIZ_MSG.getCode(), JSON.toJSONString(reqBody));
                         userChannelMap.get(userIdInMap).writeAndFlush(imMsg);
                         try {
-                            Thread.sleep(3000);
+                            Thread.sleep(6000);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }

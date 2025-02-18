@@ -7,6 +7,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Scanner;
@@ -19,6 +20,7 @@ public class MsgProviderApplication implements CommandLineRunner {
     private ISmsService smsService;
     public static void main(String[] args) {
         SpringApplication springApplication =new SpringApplication(MsgProviderApplication.class);
+        springApplication.setWebApplicationType(WebApplicationType.NONE);
         springApplication.run(args);
     }
 

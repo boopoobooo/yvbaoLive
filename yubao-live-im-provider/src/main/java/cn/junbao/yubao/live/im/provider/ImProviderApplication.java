@@ -15,6 +15,7 @@ public class ImProviderApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(ImProviderApplication.class);
+        springApplication.setWebApplicationType(WebApplicationType.NONE);
         springApplication.run(args);
     }
 

@@ -6,14 +6,8 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 117.72.52.137:8848
-        username: yubao
-        password: yubao
+        server-addr: localhost:8848
         file-extension: yaml
-        group: DEFAULT_GROUP # 可选，默认是 DEFAULT_GROUP
-        grpcTslConfig:
-          enableTls: false
-          trustAll: true
-  config:
-    import:
-      - optional:nacos:yubao-live-im-provider-dev.yaml
+        group: DEFAULT_GROUP
+
+

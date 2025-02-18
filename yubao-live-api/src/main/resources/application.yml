@@ -6,7 +6,7 @@ dubbo:
     name: yubao-live-api
     qos-enable: false
   registry:
-    address: nacos://localhost:8848
+    address: nacos://117.72.52.137:8848
     register-mode: instance
   protocol:
     name: tri
