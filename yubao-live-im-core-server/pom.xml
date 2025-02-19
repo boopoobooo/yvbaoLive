@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>yubao-live-im-core-server</artifactId>
-    <description>基于netty构建的im服务</description>
+    <description>基于netty构建的im服务,主要负责连接的建立和消息的接收和转发</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -63,6 +63,11 @@
         <dependency>
             <groupId>cn.junbao</groupId>
             <artifactId>yubao-live-common-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.junbao</groupId>
+            <artifactId>yubao-live-im-core-server-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -29,9 +29,9 @@ public class ImHandlerFactoryImpl implements ImHandlerFactory, InitializingBean 
     @Override
     public void doMsgHandler(ChannelHandlerContext channelHandlerContext, Object msg) {
         ImMsg imMsg = (ImMsg) msg;
-        ISimpleHandler iSimpleHandler = imHandlerGroup.get(imMsg.getCode());
+        ISimpleHandler iSimpleHandler = imHandlerGroup.get(imMsg.getMsgCode());
         if (iSimpleHandler == null){
-            log.error("[doMsgHandler] code error , code is {}",imMsg.getCode());
+            log.error("[doMsgHandler] code error , code is {}",imMsg.getMsgCode());
             return;
         }
         iSimpleHandler.handler(channelHandlerContext,imMsg);

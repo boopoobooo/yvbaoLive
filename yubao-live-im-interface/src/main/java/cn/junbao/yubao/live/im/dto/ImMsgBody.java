@@ -32,6 +32,10 @@ public class ImMsgBody implements Serializable {
      */
     private Long userId;
     /**
+     * 当前消息对应的业务值
+     */
+    private String bizCode;
+    /**
      * 向下游传递的消息体
      */
     private String data;

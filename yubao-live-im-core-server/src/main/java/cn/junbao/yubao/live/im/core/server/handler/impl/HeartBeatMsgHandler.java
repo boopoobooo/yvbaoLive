@@ -1,5 +1,7 @@
 package cn.junbao.yubao.live.im.core.server.handler.impl;
 
+import cn.junbao.yubao.im.core.server.constants.ImCoreServerConstants;
+import cn.junbao.yubao.live.common.interfaces.constant.CommonConstant;
 import cn.junbao.yubao.live.framework.redis.starter.key.ImCoreServerCacheKeyBuilder;
 import cn.junbao.yubao.live.im.constants.ImConstants;
 import cn.junbao.yubao.live.im.constants.ImMsgTypeCode;
@@ -39,7 +41,11 @@ public class HeartBeatMsgHandler implements ISimpleHandler {
         String cacheKey = cacheKeyBuilder.buildImUserOnline(appId, userId);
         this.recordUserOnlineHeartBeat(cacheKey,userId);
         this.removeUserOnlineTimeOutRecore(cacheKey);
+        //延期缓存消息
         redisTemplate.expire(cacheKey,5, TimeUnit.MINUTES);
+        //延长用户IP地址相关绑定信息
+        redisTemplate.expire(ImCoreServerConstants.IM_BIND_IP_KEY+appId+ CommonConstant.split+userId,
+                ImConstants.USER_HEARTBEAT_RECORD_INTERVAL * 2,TimeUnit.SECONDS);
 
         ImMsgBody imMsgBody = new ImMsgBody();
         imMsgBody.setAppId(appId);

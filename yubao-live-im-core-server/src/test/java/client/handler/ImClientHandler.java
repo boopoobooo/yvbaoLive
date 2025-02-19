@@ -21,9 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 @Slf4j
 @Service
@@ -53,53 +55,56 @@ public class ImClientHandler implements InitializingBean {
                 });
 
                 Map<Long,Channel> userChannelMap = new HashMap<>();
-                for (int i = 1; i <= 1; i++) {
-                    Long userId = 10000L+i;
-                    String token = null;
-                    try {
-                        token = imTokenRpc.createImLoginToken(userId, AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
-                    } catch (Exception e) {
-                        log.error("[ERROR] e = "+e);
-                        throw new RuntimeException(e);
-                    }
-                    log.info("rpc  token = {}",token);
-                    ImMsgBody imMsgBody = new ImMsgBody();
-                    imMsgBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
-                    imMsgBody.setUserId(userId);
-                    imMsgBody.setToken(token);
-                    imMsgBody.setData("login");
+                String token = null;
 
-                    ChannelFuture channelFuture = null;
-                    try {
-                        channelFuture = bootstrap.connect("localhost", 9090).sync();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    Channel channel = channelFuture.channel();
-                    userChannelMap.put(userId,channel);
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("请输入userId");
+                Long userId = scanner.nextLong();
+                System.out.println("输入senderName");
+                Long objectId = scanner.nextLong();
 
-                    channel.writeAndFlush(ImMsg.build(ImMsgTypeCode.IM_LOGIN_MSG.getCode(), JSON.toJSONString(imMsgBody)));
-
+                try {
+                    token = imTokenRpc.createImLoginToken(userId, AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
+                } catch (Exception e) {
+                    log.error("[ERROR] e = "+e);
+                    throw new RuntimeException(e);
                 }
+                log.info("rpc  token = {}",token);
+                ImMsgBody imMsgBody = new ImMsgBody();
+                imMsgBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
+                imMsgBody.setUserId(userId);
+                imMsgBody.setToken(token);
+                imMsgBody.setData("login");
 
-                while (true){
-                    for (Long userIdInMap : userChannelMap.keySet()) {
-                        ImMsgBody reqBody = new ImMsgBody();
-                        reqBody.setUserId(userIdInMap);
-                        reqBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("userid",userIdInMap);
-                        jsonObject.put("context","你好你好！！！！"+userIdInMap);
-                        reqBody.setData(String.valueOf(jsonObject));
-                        ImMsg imMsg = ImMsg.build(ImMsgTypeCode.IM_BIZ_MSG.getCode(), JSON.toJSONString(reqBody));
-                        userChannelMap.get(userIdInMap).writeAndFlush(imMsg);
-                        try {
-                            Thread.sleep(6000);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+                ChannelFuture channelFuture = null;
+                try {
+                    channelFuture = bootstrap.connect("localhost", 9090).sync();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                Channel channel = channelFuture.channel();
+                userChannelMap.put(userId,channel);
+
+                channel.writeAndFlush(ImMsg.build(ImMsgTypeCode.IM_LOGIN_MSG.getCode(), JSON.toJSONString(imMsgBody)));
+                sendHeartBeat(userId,channel);
+                while (true) {
+                    System.out.println("请输入聊天内容");
+                    String content = scanner.nextLine();
+                    if (StringUtils.isEmpty(content)) {
+                        continue;
                     }
-                }//while
+                    ImMsgBody bizBody = new ImMsgBody();
+                    bizBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
+                    bizBody.setUserId(userId);
+                    bizBody.setBizCode("501");
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("userId", userId);
+                    jsonObject.put("senderName", objectId);
+                    jsonObject.put("content", content);
+                    bizBody.setData(JSON.toJSONString(jsonObject));
+                    ImMsg heartBeatMsg = ImMsg.build(ImMsgTypeCode.IM_BIZ_MSG.getCode(), JSON.toJSONString(bizBody));
+                    channel.writeAndFlush(heartBeatMsg);
+                }
             }
         });
         thread.start();
@@ -109,7 +114,7 @@ public class ImClientHandler implements InitializingBean {
         new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(10000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }

@@ -3,6 +3,7 @@ package cn.junbao.yubao.live.im.core.server.handler;
 import cn.junbao.yubao.live.im.core.server.common.ImMsg;
 import cn.junbao.yubao.live.im.core.server.handler.factory.ImHandlerFactory;
 import cn.junbao.yubao.live.im.core.server.handler.factory.impl.ImHandlerFactoryImpl;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import jakarta.annotation.Resource;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@ChannelHandler.Sharable
 public class ImServerCoreHandler extends SimpleChannelInboundHandler {
     @Resource
     private ImHandlerFactory imHandlerFactory ;

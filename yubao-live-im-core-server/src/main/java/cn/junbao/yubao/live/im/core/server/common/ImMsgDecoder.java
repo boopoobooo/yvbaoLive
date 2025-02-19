@@ -31,7 +31,7 @@ public class ImMsgDecoder extends ByteToMessageDecoder {
             //转换为imMsg对象
             ImMsg imMsg = new ImMsg();
             imMsg.setMagic(ImConstants.DEFAULT_MAGIC);
-            imMsg.setCode(code);
+            imMsg.setMsgCode(code);
             imMsg.setLength(length);
             imMsg.setBody(body);
             list.add(imMsg);

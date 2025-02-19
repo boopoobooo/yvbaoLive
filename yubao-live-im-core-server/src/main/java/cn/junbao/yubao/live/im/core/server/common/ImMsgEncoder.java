@@ -12,7 +12,7 @@ public class ImMsgEncoder extends MessageToByteEncoder {
     protected void encode(ChannelHandlerContext channelHandlerContext, Object msg, ByteBuf byteBuf) throws Exception {
         ImMsg imMsg= (ImMsg) msg;
         byteBuf.writeShort(imMsg.getMagic());
-        byteBuf.writeInt(imMsg.getCode());
+        byteBuf.writeInt(imMsg.getMsgCode());
         byteBuf.writeInt(imMsg.getLength());
         byteBuf.writeBytes(imMsg.getBody());
     }

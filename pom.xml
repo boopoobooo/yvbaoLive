@@ -38,6 +38,9 @@
         <module>yubao-live-im-interface</module>
         <module>yubao-live-im-provider</module>
         <module>yubao-live-framework/yubao-live-framework-mq-starter</module>
+        <module>yubao-live-im-router-interface</module>
+        <module>yubao-live-im-core-server-interface</module>
+        <module>yubao-live-im-router-provider</module>
     </modules>
 
     <!--<dependencies>

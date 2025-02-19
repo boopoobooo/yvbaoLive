@@ -5,8 +5,16 @@ import io.netty.channel.ChannelHandlerContext;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChannelHandlerContextHashMap {
+public class ChannelHandlerContextCache {
 
+    /**
+     * 当前的im服务启动的时候，对外暴露的ip和端口
+     */
+    private static String SERVER_IP_ADDRESS = "";
+
+    /**
+     * 用于区分哪个userid使用的是哪个ChannelHandlerContext
+     */
     private static Map<Long, ChannelHandlerContext> channelHandlerContextMap = new HashMap<>();
 
     public static ChannelHandlerContext get(Long userId){
@@ -19,4 +27,11 @@ public class ChannelHandlerContextHashMap {
         channelHandlerContextMap.remove(userId);
     }
 
+    public static String getServerIpAddress() {
+        return SERVER_IP_ADDRESS;
+    }
+
+    public static void setServerIpAddress(String serverIpAddress) {
+        SERVER_IP_ADDRESS = serverIpAddress;
+    }
 }

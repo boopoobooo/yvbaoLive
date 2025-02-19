@@ -1,7 +1,9 @@
 package cn.junbao.yubao.live.msg.provider.consumer;
 
 import cn.junbao.yubao.live.im.dto.ImMsgBody;
+import cn.junbao.yubao.live.msg.provider.consumer.handler.IMessageHandler;
 import com.alibaba.fastjson2.JSON;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -20,13 +22,16 @@ public class ImMsgConsumer{
     @Value("${spring.rabbitmq.topic.yubao_im_biz_msg_topic}")
     private String topic;
 
+    @Resource
+    private IMessageHandler iMessageHandler;
 
     @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.yubao_im_biz_msg_topic}"))
     public void listener(String message) {
-        log.info("监听用户行为返利消息 topic: {} message: {}", topic, message);
+        log.info("监听消息 topic: {} message: {}", topic, message);
         // 1. 转换消息
+
         ImMsgBody imMsgBody = JSON.parseObject(message, ImMsgBody.class);
-        log.info("消费消息 {}",imMsgBody);
+        iMessageHandler.onMesReceive(imMsgBody);
     }
 
 }
