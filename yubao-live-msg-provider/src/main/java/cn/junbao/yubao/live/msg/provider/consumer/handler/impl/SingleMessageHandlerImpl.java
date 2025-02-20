@@ -32,7 +32,7 @@ public class SingleMessageHandlerImpl implements IMessageHandler {
             //todo 完善
             ImMsgBody respBody = new ImMsgBody();
             respBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
-            respBody.setUserId(messageDTO.getUserId());//接收者为 body里面的 data里具体的user
+            respBody.setUserId(messageDTO.getObjectId());//接收者为 body里面的 data里具体的user
             respBody.setBizCode(ImMsgBizCodeEnum.LIVING_ROOM_IM_BIZ.getCode());
             JSONObject jsonObject =new JSONObject();
             jsonObject.put("userId",messageDTO.getUserId());

@@ -54,6 +54,14 @@ public class ImClientHandler implements InitializingBean {
                     }
                 });
 
+                ChannelFuture channelFuture = null;
+                try {
+                    channelFuture = bootstrap.connect("localhost", 9090).sync();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                Channel channel = channelFuture.channel();
+
                 Map<Long,Channel> userChannelMap = new HashMap<>();
                 String token = null;
 
@@ -70,23 +78,19 @@ public class ImClientHandler implements InitializingBean {
                     throw new RuntimeException(e);
                 }
                 log.info("rpc  token = {}",token);
+
+                //登录消息包
                 ImMsgBody imMsgBody = new ImMsgBody();
                 imMsgBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
                 imMsgBody.setUserId(userId);
                 imMsgBody.setToken(token);
-                imMsgBody.setData("login");
-
-                ChannelFuture channelFuture = null;
-                try {
-                    channelFuture = bootstrap.connect("localhost", 9090).sync();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                Channel channel = channelFuture.channel();
                 userChannelMap.put(userId,channel);
-
                 channel.writeAndFlush(ImMsg.build(ImMsgTypeCode.IM_LOGIN_MSG.getCode(), JSON.toJSONString(imMsgBody)));
+
+                //异步发送心跳包
                 sendHeartBeat(userId,channel);
+
+
                 while (true) {
                     System.out.println("请输入聊天内容");
                     String content = scanner.nextLine();
@@ -99,7 +103,7 @@ public class ImClientHandler implements InitializingBean {
                     bizBody.setBizCode("501");
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("userId", userId);
-                    jsonObject.put("senderName", objectId);
+                    jsonObject.put("objectId", objectId);
                     jsonObject.put("content", content);
                     bizBody.setData(JSON.toJSONString(jsonObject));
                     ImMsg heartBeatMsg = ImMsg.build(ImMsgTypeCode.IM_BIZ_MSG.getCode(), JSON.toJSONString(bizBody));

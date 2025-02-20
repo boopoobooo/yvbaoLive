@@ -11,9 +11,14 @@ import org.springframework.context.annotation.Configuration;
 public class ImCoreServerCacheKeyBuilder extends RedisKeyBuilder {
 
     private static final String IM_USER_ONLINE_RECORD = "imUserOnlineRecord";
+    private static final String IM_MSG_ACK_MAP = "im_Msg_ACK_Map";
 
     public String buildImUserOnline(Integer appId,Long userId ) {
         return super.getPrefix() + IM_USER_ONLINE_RECORD + super.getSplitItem()+appId + super.getSplitItem()+userId % 10000;
+    }
+
+    public String buildImMsgAckMapKey(Integer appId,Long userId ) {
+        return super.getPrefix()+IM_MSG_ACK_MAP+super.getSplitItem()+appId+super.getSplitItem()+userId%100;
     }
 
 

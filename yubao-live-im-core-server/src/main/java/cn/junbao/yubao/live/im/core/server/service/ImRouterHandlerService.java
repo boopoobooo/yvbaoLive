@@ -9,4 +9,6 @@ public interface ImRouterHandlerService {
      * @param imMsgBody
      */
     void onReceive(ImMsgBody imMsgBody);
+
+    boolean sendMsgToClient(ImMsgBody imMsgBody);
 }

@@ -4,10 +4,7 @@ import cn.junbao.yubao.live.im.constants.ImMsgTypeCode;
 import cn.junbao.yubao.live.im.core.server.common.ImMsg;
 import cn.junbao.yubao.live.im.core.server.handler.ISimpleHandler;
 import cn.junbao.yubao.live.im.core.server.handler.factory.ImHandlerFactory;
-import cn.junbao.yubao.live.im.core.server.handler.impl.DefaultBizMsgHandler;
-import cn.junbao.yubao.live.im.core.server.handler.impl.HeartBeatMsgHandler;
-import cn.junbao.yubao.live.im.core.server.handler.impl.LoginMsgHandler;
-import cn.junbao.yubao.live.im.core.server.handler.impl.LogoutMsgHandler;
+import cn.junbao.yubao.live.im.core.server.handler.impl.*;
 import io.netty.channel.ChannelHandlerContext;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -46,5 +43,6 @@ public class ImHandlerFactoryImpl implements ImHandlerFactory, InitializingBean 
         imHandlerGroup.put(ImMsgTypeCode.IM_LOGOUT_MSG.getCode(), applicationContext.getBean(LogoutMsgHandler.class));
         imHandlerGroup.put(ImMsgTypeCode.IM_BIZ_MSG.getCode(), applicationContext.getBean(DefaultBizMsgHandler.class));
         imHandlerGroup.put(ImMsgTypeCode.IM_HEARTBEAT_MSG.getCode(), applicationContext.getBean(HeartBeatMsgHandler.class));
+        imHandlerGroup.put(ImMsgTypeCode.ACK_IM_MSG.getCode(), applicationContext.getBean(AckMsgHandler.class));
     }
 }

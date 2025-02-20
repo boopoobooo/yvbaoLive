@@ -4,6 +4,7 @@ import cn.junbao.yubao.im.core.server.constants.ImCoreServerConstants;
 import cn.junbao.yubao.live.im.constants.ImConstants;
 import cn.junbao.yubao.live.im.provider.service.ImOnlineService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
  * @Description
  */
 @Service
+@Slf4j
 public class ImOnlineServiceImpl implements ImOnlineService {
 
     @Resource
@@ -20,7 +22,9 @@ public class ImOnlineServiceImpl implements ImOnlineService {
 
     @Override
     public boolean isOnline(long userId, int appId) {
-        return redisTemplate.hasKey(ImCoreServerConstants.IM_BIND_IP_KEY + appId + ":" + userId);
+        Boolean result = redisTemplate.hasKey(ImCoreServerConstants.IM_BIND_IP_KEY + appId + ":" + userId);
+        log.debug("[isOnline] userId = {},appid ={}, isOnline = {}",userId,appId,result);
+        return result;
     }
 
 }

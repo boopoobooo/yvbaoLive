@@ -19,6 +19,8 @@ public class MessageDTO {
     private Long userId;
     //发送人名称
     private String senderName;
+
+    private Long objectId;
     /**
      * 消息类型
      */
