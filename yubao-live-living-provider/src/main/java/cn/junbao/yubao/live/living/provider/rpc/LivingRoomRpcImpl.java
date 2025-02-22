@@ -1,0 +1,35 @@
+package cn.junbao.yubao.live.living.provider.rpc;
+
+import cn.junbao.yubao.live.living.interfaces.dto.LivingRoomReqDTO;
+import cn.junbao.yubao.live.living.interfaces.dto.LivingRoomRespDTO;
+import cn.junbao.yubao.live.living.interfaces.rpc.ILivingRoomRpc;
+import cn.junbao.yubao.live.living.provider.service.ILivingRoomService;
+import jakarta.annotation.Resource;
+import org.apache.dubbo.config.annotation.DubboService;
+
+/**
+ * @Author: Junbao
+ * @Date: 2025/2/22 23:29
+ * @Description:
+ */
+@DubboService
+public class LivingRoomRpcImpl implements ILivingRoomRpc {
+
+    @Resource
+    private ILivingRoomService livingRoomService;
+
+    @Override
+    public LivingRoomRespDTO queryByRoomId(Integer roomId) {
+        return null;
+    }
+
+    @Override
+    public Integer startLivingRoom(LivingRoomReqDTO livingRoomReqDTO) {
+        return livingRoomService.startLivingRoom(livingRoomReqDTO);
+    }
+
+    @Override
+    public boolean closeLiving(LivingRoomReqDTO livingRoomReqDTO) {
+        return livingRoomService.closeLiving(livingRoomReqDTO);
+    }
+}

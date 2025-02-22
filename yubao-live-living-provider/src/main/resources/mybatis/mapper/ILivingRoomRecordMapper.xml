@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.junbao.yubao.live.living.provider.dao.mapper.ILivingRoomRecordMapper">
+
+    <resultMap id="dataMap" type="cn.junbao.yubao.live.living.provider.dao.po.LivingRoomRecordPO">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="anchor_id" property="anchorId" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="room_name" property="roomName" jdbcType="VARCHAR"/>
+        <result column="covert_img" property="covertImg" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="watch_num" property="watchNum" jdbcType="INTEGER"/>
+        <result column="good_num" property="goodNum" jdbcType="INTEGER"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <insert id="insertOne" parameterType="cn.junbao.yubao.live.living.provider.dao.po.LivingRoomRecordPO">
+        INSERT INTO living_room (
+        anchor_id, type, room_name,
+        covert_img, status, watch_num,
+        good_num, start_time, end_time, update_time
+        ) VALUES (
+        #{anchorId,jdbcType=BIGINT},
+        #{type,jdbcType=INTEGER},
+        #{roomName,jdbcType=VARCHAR},
+        #{covertImg,jdbcType=VARCHAR},
+        #{status,jdbcType=INTEGER},
+        #{watchNum,jdbcType=INTEGER},
+        #{goodNum,jdbcType=INTEGER},
+        #{startTime,jdbcType=TIMESTAMP},
+        #{endTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+</mapper>
