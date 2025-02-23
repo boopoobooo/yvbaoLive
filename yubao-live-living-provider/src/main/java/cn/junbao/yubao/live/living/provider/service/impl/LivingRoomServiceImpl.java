@@ -17,7 +17,9 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: Junbao
@@ -72,5 +74,18 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
         livingRoomRecordMapper.insertOne(livingRoomRecordPO);
         livingRoomMapper.deleteByRoomId(roomId);
         return true;
+    }
+
+    @Override
+    public List<LivingRoomRespDTO> getLivingRoomPage(Integer type, int pageNum, int pageSize) {
+        int offset = (pageNum - 1) * pageSize;
+        List<LivingRoomPO> livingRoomPOList = livingRoomMapper.selectLivingRoomPage(type,offset, pageSize);
+        List<LivingRoomRespDTO> livingRoomRespDTOList = new ArrayList<>();
+
+        for (LivingRoomPO livingRoomPO : livingRoomPOList) {
+            LivingRoomRespDTO livingRoomRespDTO = ConvertBeanUtils.convert(livingRoomPO, LivingRoomRespDTO.class);
+            livingRoomRespDTOList.add(livingRoomRespDTO);
+        }
+        return livingRoomRespDTOList;
     }
 }

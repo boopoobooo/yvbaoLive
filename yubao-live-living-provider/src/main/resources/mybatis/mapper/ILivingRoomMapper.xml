@@ -45,4 +45,10 @@
         from living_room where room_id = #{roomId};
     </select>
 
+    <select id="selectLivingRoomPage" resultMap="dataMap">
+        SELECT * FROM living_room
+            where type = #{type}
+            LIMIT #{limit} OFFSET #{offset}
+    </select>
+
 </mapper>

@@ -23,6 +23,9 @@ public interface ILivingRoomRpc {
      */
     LivingRoomRespDTO queryByRoomId(Integer roomId);
 
+
+
+
     /**
      * 开启直播间
      *
@@ -35,5 +38,7 @@ public interface ILivingRoomRpc {
      * 关闭直播间
      */
     boolean closeLiving(LivingRoomReqDTO livingRoomReqDTO);
+
+    List<LivingRoomRespDTO> list(Integer type,int pageNum, int pageSize );
 
 }

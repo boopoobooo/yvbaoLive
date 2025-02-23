@@ -4,6 +4,8 @@ import cn.junbao.yubao.live.living.provider.dao.po.LivingRoomPO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 @Mapper
 public interface ILivingRoomMapper {
 
@@ -12,4 +14,6 @@ public interface ILivingRoomMapper {
     LivingRoomPO selectByRoomId(@Param("roomId") Integer roomId);
 
     void deleteByRoomId(Integer roomId);
+
+    List<LivingRoomPO> selectLivingRoomPage(@Param("type") Integer type,@Param("offset") int offset, @Param("limit") int limit);
 }

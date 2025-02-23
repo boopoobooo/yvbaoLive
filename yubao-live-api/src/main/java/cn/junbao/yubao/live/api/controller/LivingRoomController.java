@@ -4,6 +4,7 @@ import cn.junbao.yubao.live.api.service.ILivingRoomService;
 import cn.junbao.yubao.live.api.vo.LivingRoomInitVO;
 import cn.junbao.yubao.live.common.interfaces.vo.WebResponseVO;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,10 +16,21 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/living")
+@Slf4j
 public class LivingRoomController {
 
     @Resource
     private ILivingRoomService livingRoomService;
+
+    @PostMapping("/list")
+    public WebResponseVO list(Integer type,int pageNum, int pageSize){
+        if (type == null ){
+            log.warn("[list]参数异常，type is null");
+            return WebResponseVO.errorParam("type is null");
+        }
+        return WebResponseVO.success(livingRoomService.list(type,pageNum,pageSize));
+    }
+
 
     @PostMapping("/startingLiving")
     public WebResponseVO startingLiving(Integer type) {

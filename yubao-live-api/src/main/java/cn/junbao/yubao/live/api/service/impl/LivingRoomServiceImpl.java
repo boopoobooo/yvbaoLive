@@ -1,13 +1,16 @@
 package cn.junbao.yubao.live.api.service.impl;
 
 import cn.junbao.yubao.live.api.service.ILivingRoomService;
+import cn.junbao.yubao.live.api.vo.LivingRoomPageRespVO;
 import cn.junbao.yubao.live.framework.web.strater.context.WebRequestContext;
 import cn.junbao.yubao.live.im.constants.AppIdEnum;
 import cn.junbao.yubao.live.living.interfaces.dto.LivingRoomReqDTO;
-import cn.junbao.yubao.live.living.interfaces.enums.LivingRoomType;
+import cn.junbao.yubao.live.living.interfaces.dto.LivingRoomRespDTO;
 import cn.junbao.yubao.live.living.interfaces.rpc.ILivingRoomRpc;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Author: Junbao
@@ -17,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LivingRoomServiceImpl implements ILivingRoomService {
     @DubboReference
-    private ILivingRoomRpc iLivingRoomRpc;
+    private ILivingRoomRpc livingRoomRpc;
 
 
     /**
@@ -30,7 +33,7 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
         livingRoomReqDTO.setRoomName("主播:"+WebRequestContext.getUserId()+"的房间");
         livingRoomReqDTO.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
         livingRoomReqDTO.setType(type);
-        Integer livingRoomId = iLivingRoomRpc.startLivingRoom(livingRoomReqDTO);
+        Integer livingRoomId = livingRoomRpc.startLivingRoom(livingRoomReqDTO);
 
         return livingRoomId;
     }
@@ -40,6 +43,12 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
         LivingRoomReqDTO livingRoomReqDTO = new LivingRoomReqDTO();
         livingRoomReqDTO.setAnchorId(WebRequestContext.getUserId());
         livingRoomReqDTO.setRoomId(roomId);
-        return iLivingRoomRpc.closeLiving(livingRoomReqDTO );
+        return livingRoomRpc.closeLiving(livingRoomReqDTO );
+    }
+
+    @Override
+    public List<LivingRoomRespDTO> list(Integer type,int pageNum, int pageSize) {
+        List<LivingRoomRespDTO> livingRoomRespDTOList = livingRoomRpc.list(type,pageNum,pageSize);
+        return livingRoomRespDTOList;
     }
 }

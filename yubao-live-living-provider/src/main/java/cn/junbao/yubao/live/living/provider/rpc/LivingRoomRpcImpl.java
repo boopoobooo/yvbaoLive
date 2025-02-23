@@ -7,6 +7,8 @@ import cn.junbao.yubao.live.living.provider.service.ILivingRoomService;
 import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
 
+import java.util.List;
+
 /**
  * @Author: Junbao
  * @Date: 2025/2/22 23:29
@@ -31,5 +33,10 @@ public class LivingRoomRpcImpl implements ILivingRoomRpc {
     @Override
     public boolean closeLiving(LivingRoomReqDTO livingRoomReqDTO) {
         return livingRoomService.closeLiving(livingRoomReqDTO);
+    }
+
+    @Override
+    public List<LivingRoomRespDTO> list(Integer type, int pageNum, int pageSize) {
+        return livingRoomService.getLivingRoomPage(type,pageNum,pageSize);
     }
 }
