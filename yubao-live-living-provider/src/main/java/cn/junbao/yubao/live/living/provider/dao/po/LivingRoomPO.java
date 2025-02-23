@@ -18,7 +18,7 @@ import java.util.Date;
 public class LivingRoomPO {
 
     private Integer id;
-    private Integer roomId;
+    private Long roomId;
     private Long anchorId;
     private Integer type;
     private String roomName;

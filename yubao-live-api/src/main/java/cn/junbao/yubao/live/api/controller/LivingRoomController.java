@@ -34,7 +34,7 @@ public class LivingRoomController {
 
     @PostMapping("/startingLiving")
     public WebResponseVO startingLiving(Integer type) {
-        Integer roomId = livingRoomService.startLiving(type);
+        Long roomId = livingRoomService.startLiving(type);
         LivingRoomInitVO initVO = new LivingRoomInitVO();
         initVO.setRoomId(roomId);
         return WebResponseVO.success(initVO);
@@ -42,7 +42,7 @@ public class LivingRoomController {
 
 
     @PostMapping("/closeLiving")
-    public WebResponseVO closeLiving(Integer roomId) {
+    public WebResponseVO closeLiving(Long roomId) {
         boolean closeStatus = livingRoomService.closeLiving(roomId);
         if (closeStatus) {
             return WebResponseVO.success();

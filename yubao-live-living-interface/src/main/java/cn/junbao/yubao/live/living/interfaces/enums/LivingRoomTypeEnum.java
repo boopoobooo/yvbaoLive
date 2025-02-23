@@ -5,8 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum LivingRoomType {
-    DEFAULT_LIVING_ROOM_TYPE(1101,"默认直播间类型");
+public enum LivingRoomTypeEnum {
+    DEFAULT_LIVING_ROOM(1101,"默认直播间类型"),
+    PK_LIVING_ROOM(1102,"pk直播间类型");
 
     private Integer code;
     private String desc;

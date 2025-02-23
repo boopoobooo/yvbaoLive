@@ -11,12 +11,12 @@ import lombok.ToString;
 @ToString
 public class LivingRoomInitVO {
 
+    private Long roomId;
     private Long anchorId;
     private Long userId;
     private String anchorImg;
     private String roomName;
     private String avatar;
-    private Integer roomId;
     private String watcherNickName;
     //主播头像
     private String anchorNickName;

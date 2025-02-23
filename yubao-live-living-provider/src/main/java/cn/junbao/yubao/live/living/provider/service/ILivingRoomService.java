@@ -13,7 +13,7 @@ public interface ILivingRoomService {
      * @param roomId
      * @return
      */
-    LivingRoomRespDTO queryByRoomId(Integer roomId);
+    LivingRoomRespDTO queryByRoomId(Long roomId);
 
     /**
      * 开启直播间
@@ -21,7 +21,7 @@ public interface ILivingRoomService {
      * @param livingRoomReqDTO
      * @return 直播间id
      */
-    Integer startLivingRoom(LivingRoomReqDTO livingRoomReqDTO);
+    Long startLivingRoom(LivingRoomReqDTO livingRoomReqDTO);
 
     /**
      * 关闭直播间
@@ -29,4 +29,6 @@ public interface ILivingRoomService {
     boolean closeLiving(LivingRoomReqDTO livingRoomReqDTO);
 
     List<LivingRoomRespDTO> getLivingRoomPage(Integer type , int pageNum, int pageSize);
+
+    List<LivingRoomRespDTO> listAllLivingRoomFromDB(Integer type);
 }

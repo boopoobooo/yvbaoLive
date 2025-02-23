@@ -21,12 +21,12 @@ public class LivingRoomRpcImpl implements ILivingRoomRpc {
     private ILivingRoomService livingRoomService;
 
     @Override
-    public LivingRoomRespDTO queryByRoomId(Integer roomId) {
-        return null;
+    public LivingRoomRespDTO queryByRoomId(Long roomId) {
+        return livingRoomService.queryByRoomId(roomId);
     }
 
     @Override
-    public Integer startLivingRoom(LivingRoomReqDTO livingRoomReqDTO) {
+    public Long startLivingRoom(LivingRoomReqDTO livingRoomReqDTO) {
         return livingRoomService.startLivingRoom(livingRoomReqDTO);
     }
 

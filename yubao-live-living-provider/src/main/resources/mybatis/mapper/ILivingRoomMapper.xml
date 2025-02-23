@@ -47,8 +47,17 @@
 
     <select id="selectLivingRoomPage" resultMap="dataMap">
         SELECT * FROM living_room
-            where type = #{type}
+            where type = #{type} and status = true
             LIMIT #{limit} OFFSET #{offset}
     </select>
+    <select id="selectAll" resultMap="dataMap">
+        select * from living_room where type = #{type} and status = true
+        order by start_time desc
+    </select>
+    <select id="selectOneByRoomId" resultMap="dataMap">
+        select * from living_room
+        where roomId = #{roomId} and status = ture
+        limit 1
+   </select>
 
 </mapper>

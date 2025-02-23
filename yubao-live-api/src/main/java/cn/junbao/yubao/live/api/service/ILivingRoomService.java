@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface ILivingRoomService {
 
-    Integer startLiving(Integer type);
+    Long startLiving(Integer type);
 
-    boolean closeLiving(Integer roomId);
+    boolean closeLiving(Long roomId);
 
     List<LivingRoomRespDTO> list(Integer type, int pageNum, int pageSize );
 }

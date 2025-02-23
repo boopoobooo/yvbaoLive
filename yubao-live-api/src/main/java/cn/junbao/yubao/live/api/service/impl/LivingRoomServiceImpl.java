@@ -27,19 +27,19 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
      * 直播间开播
      */
     @Override
-    public Integer startLiving(Integer type) {
+    public Long startLiving(Integer type) {
         LivingRoomReqDTO livingRoomReqDTO = new LivingRoomReqDTO();
         livingRoomReqDTO.setAnchorId(WebRequestContext.getUserId());
         livingRoomReqDTO.setRoomName("主播:"+WebRequestContext.getUserId()+"的房间");
         livingRoomReqDTO.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
         livingRoomReqDTO.setType(type);
-        Integer livingRoomId = livingRoomRpc.startLivingRoom(livingRoomReqDTO);
+        Long livingRoomId = livingRoomRpc.startLivingRoom(livingRoomReqDTO);
 
         return livingRoomId;
     }
 
     @Override
-    public boolean closeLiving(Integer roomId) {
+    public boolean closeLiving(Long roomId) {
         LivingRoomReqDTO livingRoomReqDTO = new LivingRoomReqDTO();
         livingRoomReqDTO.setAnchorId(WebRequestContext.getUserId());
         livingRoomReqDTO.setRoomId(roomId);

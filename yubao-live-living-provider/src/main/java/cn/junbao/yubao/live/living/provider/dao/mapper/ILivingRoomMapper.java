@@ -11,9 +11,13 @@ public interface ILivingRoomMapper {
 
     void insertOne(LivingRoomPO livingRoomPO);
 
-    LivingRoomPO selectByRoomId(@Param("roomId") Integer roomId);
+    LivingRoomPO selectByRoomId(@Param("roomId") Long roomId);
 
-    void deleteByRoomId(Integer roomId);
+    void deleteByRoomId(Long roomId);
 
     List<LivingRoomPO> selectLivingRoomPage(@Param("type") Integer type,@Param("offset") int offset, @Param("limit") int limit);
+
+    List<LivingRoomPO>  selectAll(@Param("type") Integer type);
+
+    LivingRoomPO selectOneByRoomId(@Param("roomId") Long roomId);
 }

@@ -21,7 +21,7 @@ public interface ILivingRoomRpc {
      * @param roomId
      * @return
      */
-    LivingRoomRespDTO queryByRoomId(Integer roomId);
+    LivingRoomRespDTO queryByRoomId(Long roomId);
 
 
 
@@ -32,7 +32,7 @@ public interface ILivingRoomRpc {
      * @param livingRoomReqDTO
      * @return 直播间id
      */
-    Integer startLivingRoom(LivingRoomReqDTO livingRoomReqDTO);
+    Long startLivingRoom(LivingRoomReqDTO livingRoomReqDTO);
 
     /**
      * 关闭直播间
