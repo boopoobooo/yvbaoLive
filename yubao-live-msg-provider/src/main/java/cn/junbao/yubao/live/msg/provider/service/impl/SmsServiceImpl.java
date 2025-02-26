@@ -62,15 +62,13 @@ public class SmsServiceImpl implements ISmsService {
         } catch (Exception e) {
             log.error("[sendLoginCode]ERROR:"+e);
             throw new RuntimeException(e);
-        }finally {
-            aliyunSmsUtil.close();
         }
-
         return MsgSendResultEnum.SEND_SUCCESS;
     }
 
     @Override
     public MsgCheckDTO checkLoginCode(String phone, String code) {
+        log.info("[checkLoginCode] phone = {},code = {}",phone,code);
         if (StringUtils.isBlank(phone)||code == null || code.length() < 6){
             return new MsgCheckDTO(false,MsgSendResultEnum.MSG_PARAM_ERROR.getDesc());
         }
@@ -82,6 +80,7 @@ public class SmsServiceImpl implements ISmsService {
             return new MsgCheckDTO(false,"当前手机号验证码已过期");
         }
         if (cacheLoginCode.equals(code)){
+            log.info("[checkLoginCode]校验验证码成功");
             return new MsgCheckDTO(true,"验证成功");
         }
 

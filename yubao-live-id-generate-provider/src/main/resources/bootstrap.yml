@@ -9,6 +9,3 @@ spring:
         server-addr: localhost:8848
         file-extension: yaml
         group: DEFAULT_GROUP # 可选，默认是 DEFAULT_GROUP
-        grpcTslConfig:
-          enableTls: false
-          trustAll: true

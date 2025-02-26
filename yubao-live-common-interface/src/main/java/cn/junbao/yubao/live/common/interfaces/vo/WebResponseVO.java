@@ -49,7 +49,7 @@ public class WebResponseVO {
 
     public static WebResponseVO errorParam(String msg) {
         WebResponseVO webResponseVO = new WebResponseVO();
-        webResponseVO.setCode(400);
+        webResponseVO.setCode(401);
         webResponseVO.setMsg(msg);
         return webResponseVO;
     }

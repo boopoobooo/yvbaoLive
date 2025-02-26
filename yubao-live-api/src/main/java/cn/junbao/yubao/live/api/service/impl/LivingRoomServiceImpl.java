@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Service
 public class LivingRoomServiceImpl implements ILivingRoomService {
-    @DubboReference
+    @DubboReference(check = false)
     private ILivingRoomRpc livingRoomRpc;
 
 

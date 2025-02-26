@@ -27,12 +27,14 @@ public class MsgProviderApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String phone = "13878594448";
+        /*String phone = "13878594448";
         smsService.sendLoginCode(phone );
         Scanner sc = new Scanner(System.in);
         System.out.println("请输入：");
         String code = sc.next();
         MsgCheckDTO msgCheckDTO = smsService.checkLoginCode(phone, code);
-        System.out.println(msgCheckDTO.isCheckStatus()+"   "+msgCheckDTO.getDesc());
+        System.out.println(msgCheckDTO.isCheckStatus()+"   "+msgCheckDTO.getDesc());*/
+
+        System.out.println("============test=====================");
     }
 }

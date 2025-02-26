@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class SingleMessageHandlerImpl implements IMessageHandler {
 
 
-    @DubboReference
+    @DubboReference(check = false)
     private ImRouterRpc imRouterRpc;
     @Override
     public void onMesReceive(ImMsgBody imMsgBody) {

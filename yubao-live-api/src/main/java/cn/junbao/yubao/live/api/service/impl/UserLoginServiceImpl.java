@@ -3,6 +3,7 @@ package cn.junbao.yubao.live.api.service.impl;
 import cn.junbao.yubao.live.account.interfaces.rpc.IAccountTokenRpc;
 import cn.junbao.yubao.live.api.service.IUserLoginService;
 import cn.junbao.yubao.live.api.vo.UserLoginVO;
+import cn.junbao.yubao.live.api.vo.req.UserPhoneLoginReqVO;
 import cn.junbao.yubao.live.common.interfaces.enums.WebRequestEnum;
 import cn.junbao.yubao.live.common.interfaces.utils.ConvertBeanUtils;
 import cn.junbao.yubao.live.common.interfaces.vo.WebResponseVO;
@@ -14,24 +15,27 @@ import cn.junbao.yubao.live.user.interfaces.IUserPhoneRpc;
 import com.alibaba.cloud.commons.lang.StringUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Pattern;
 
 @Service
+@Slf4j
 public class UserLoginServiceImpl implements IUserLoginService {
 
     private static final String PHONE_REG = "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$";
-    @DubboReference
+    @DubboReference(check = false)
     private ISmsRpc smsRpc ;
-    @DubboReference
+    @DubboReference(check = false)
     private IUserPhoneRpc userPhoneRpc;
-    @DubboReference
+    @DubboReference(check = false)
     private IAccountTokenRpc accountTokenRpc;
 
     @Override
     public WebResponseVO sendLoginCode(String phone) {
+        log.info("[sendLoginCode] phoneNumber = {}",phone);
         //1. 校验手机号
         if (StringUtils.isBlank(phone)){
             return WebResponseVO.errorParam("手机号格式不正确:"+phone);
@@ -39,13 +43,18 @@ public class UserLoginServiceImpl implements IUserLoginService {
         //2. 发送验证码
         MsgSendResultEnum msgSendResultEnum = smsRpc.sendLoginCode(phone);
         if (msgSendResultEnum == MsgSendResultEnum.SEND_SUCCESS) {
+            log.info("[sendLoginCode] 验证码发送成功,phone= {}",phone);
             return WebResponseVO.success();
         }
-        return WebResponseVO.sysError("短信发送太频繁，请稍后再试");
+        log.warn("[sendLoginCode] 验证码发送失败==phone={}",phone);
+        return WebResponseVO.sysError("短信发送失败，请稍后再试");
     }
 
     @Override
-    public WebResponseVO login(String phone, String code, HttpServletResponse response) {
+    public WebResponseVO login(UserPhoneLoginReqVO userPhoneLoginReqVO, HttpServletResponse response) {
+        String phone = userPhoneLoginReqVO.getPhone();
+        String code = userPhoneLoginReqVO.getCode();
+        log.info("[login] 用户手机号登录: phone = {},code = {}",phone,code);
         //1. 校验格式
         if (StringUtils.isEmpty(phone)) {
             return WebResponseVO.errorParam("手机号不能为空");
@@ -62,6 +71,7 @@ public class UserLoginServiceImpl implements IUserLoginService {
         if (!msgCheckDTO.isCheckStatus()) {
             return WebResponseVO.bizError(msgCheckDTO.getDesc());
         }
+        log.info("[login] 验证码校验通过..当前phone:{}",phone);
         //验证码校验通过
         UserLoginDTO userLoginDTO = userPhoneRpc.login(phone);
         //生成token

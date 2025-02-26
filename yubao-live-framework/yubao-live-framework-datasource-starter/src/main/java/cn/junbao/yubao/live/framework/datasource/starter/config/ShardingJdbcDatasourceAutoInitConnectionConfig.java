@@ -27,7 +27,7 @@ public class ShardingJdbcDatasourceAutoInitConnectionConfig {
         return args -> {
             LOGGER.info("[ShardingJdbcDatasourceAutoInitConnectionConfig]dataSource: {}", dataSource);
             //手动触发下连接池的连接创建
-            //Connection connection = dataSource.getConnection();
+            Connection connection = dataSource.getConnection();
         };
     }
 }

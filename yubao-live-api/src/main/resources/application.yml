@@ -1,16 +1,20 @@
 server:
-  port: 8080
+  port: 8081
 dubbo:
   application:
     logger: slf4j
     name: yubao-live-api
     qos-enable: false
   registry:
-    address: nacos://117.72.52.137:8848
+    address: nacos://yubao.com:8848
     register-mode: instance
   protocol:
-    name: tri
-    port: 50051
+    name: dubbo
+    port: -1
+  consumer:
+    timeout: 15000  # 设置 Dubbo 客户端的请求超时时间为 15 秒
+  provider:
+    timeout: 15000  # 设置 Dubbo 服务端的请求超时时间为 15 秒
 
 spring:
   application:

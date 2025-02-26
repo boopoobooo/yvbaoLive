@@ -6,7 +6,6 @@ import cn.junbao.yubao.live.common.interfaces.utils.DESUtils;
 import cn.junbao.yubao.live.framework.redis.starter.key.UserProviderCacheKeyBuilder;
 import cn.junbao.yubao.live.id.generate.enums.IdTypeEnum;
 import cn.junbao.yubao.live.id.generate.interfaces.IdGenerateRpc;
-import cn.junbao.yubao.live.user.dto.UserDTO;
 import cn.junbao.yubao.live.user.dto.UserLoginDTO;
 import cn.junbao.yubao.live.user.dto.UserPhoneDTO;
 import cn.junbao.yubao.live.user.provider.dao.mapper.IUserMapper;
@@ -14,10 +13,10 @@ import cn.junbao.yubao.live.user.provider.dao.mapper.IUserPhoneMapper;
 import cn.junbao.yubao.live.user.provider.dao.po.UserPO;
 import cn.junbao.yubao.live.user.provider.dao.po.UserPhonePO;
 import cn.junbao.yubao.live.user.provider.service.IUserPhoneService;
+import com.alibaba.cloud.commons.lang.StringUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -45,20 +44,20 @@ public class UserPhoneServiceImpl implements IUserPhoneService {
     @Override
     public UserLoginDTO login(String phone) {
 
-        if (Strings.isBlank(phone)){
+        if (StringUtils.isBlank(phone)){
             log.warn("[login] phone is null");
             return null;
         }
         //是否注册
         UserPhoneDTO userPhoneDTO = this.queryByPhone(phone);
-        //已注册，则 生成token，存入缓存，返回对象
+        //已注册，返回对象
         if (userPhoneDTO != null) {
             log.info("[login]用户已注册，登录成功");
             return UserLoginDTO.loginSuccess(userPhoneDTO.getUserId(),phone);
         }
 
-        //未注册，创建对象， 插入数据库，生成token，存入缓存，返回
-        log.info("[login]用户未注册,登录失败");
+        //未注册，创建对象， 插入数据库，存入缓存，返回
+        log.info("[login]用户未注册,进行注册,phone ={}",phone);
         return this.registerAndInsertDB(phone);
     }
 
@@ -69,9 +68,11 @@ public class UserPhoneServiceImpl implements IUserPhoneService {
      */
     private UserLoginDTO registerAndInsertDB(String phone) {
         UserPO userPO = new UserPO();
+
         Long userId = idGenerateRpc.getUnSeqId(IdTypeEnum.USER_ID.getCode());
         userPO.setUserId(userId);
         userPO.setNickName("鱼宝用户-"+userId);
+        log.info("[registerAndInsertDB] userId = {}",userId);
         userMapper.insertOne(userPO);
 
         UserPhonePO userPhonePO = new UserPhonePO();

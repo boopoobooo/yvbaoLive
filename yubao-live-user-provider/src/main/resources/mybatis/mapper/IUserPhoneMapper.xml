@@ -22,6 +22,7 @@
         select * from user_phone
         where phone = #{phone}
     </select>
+
     <select id="queryByUserId" resultMap="dataMap">
         select * from user_phone
         where user_id = #{userId}

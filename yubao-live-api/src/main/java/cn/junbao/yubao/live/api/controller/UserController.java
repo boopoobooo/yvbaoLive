@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    @DubboReference
+    @DubboReference(check = false)
     private IUserRpc userRpc;
 
     Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -30,6 +30,12 @@ public class UserController {
     public Map<Long,UserDTO> batchQueryUserInfo(String userIdsStr){
         List<Long> userIds = Arrays.asList(userIdsStr.split(",")).stream().map(x -> Long.valueOf(x)).collect(Collectors.toList());
         return userRpc.batchQueryUserInfo(userIds);
+    }
+
+    @GetMapping("/test")
+    public String test(){
+        logger.info("===============test================");
+        return "success";
     }
 
 }

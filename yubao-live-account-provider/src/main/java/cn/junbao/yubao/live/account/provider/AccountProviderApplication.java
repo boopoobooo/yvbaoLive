@@ -17,6 +17,18 @@ public class AccountProviderApplication implements CommandLineRunner {
         SpringApplication springApplication = new SpringApplication(AccountProviderApplication.class);
         springApplication.setWebApplicationType(WebApplicationType.NONE);
         springApplication.run(args);
+
+        new Thread(
+                ()->{
+                    synchronized (AccountProviderApplication.class){
+                        try {
+                            AccountProviderApplication.class.wait();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).start();
     }
 
     @Resource
