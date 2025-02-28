@@ -11,12 +11,14 @@ import cn.junbao.yubao.live.msg.dto.MsgCheckDTO;
 import cn.junbao.yubao.live.msg.enums.MsgSendResultEnum;
 import cn.junbao.yubao.live.msg.interfaces.ISmsRpc;
 import cn.junbao.yubao.live.user.dto.UserLoginDTO;
+import cn.junbao.yubao.live.user.interfaces.IUserAccountRpc;
 import cn.junbao.yubao.live.user.interfaces.IUserPhoneRpc;
 import com.alibaba.cloud.commons.lang.StringUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Pattern;
@@ -31,7 +33,11 @@ public class UserLoginServiceImpl implements IUserLoginService {
     @DubboReference(check = false)
     private IUserPhoneRpc userPhoneRpc;
     @DubboReference(check = false)
-    private IAccountTokenRpc accountTokenRpc;
+    private IUserAccountRpc userAccountRpc;
+
+
+//    @DubboReference(check = false)
+//    private IAccountTokenRpc accountTokenRpc;
 
     @Override
     public WebResponseVO sendLoginCode(String phone) {
@@ -74,8 +80,9 @@ public class UserLoginServiceImpl implements IUserLoginService {
         log.info("[login] 验证码校验通过..当前phone:{}",phone);
         //验证码校验通过
         UserLoginDTO userLoginDTO = userPhoneRpc.login(phone);
+        log.info("[login]userPhoneRpc.login的结果为 useId = {}",userLoginDTO.getUserId());
         //生成token
-        String loginToken = accountTokenRpc.createAndSaveToken(userLoginDTO.getUserId());
+        String loginToken = userAccountRpc.createAndSaveToken(userLoginDTO.getUserId());
         this.saveTokenInCookie(loginToken,response);
 
         return WebResponseVO.success(ConvertBeanUtils.convert(userLoginDTO, UserLoginVO.class));

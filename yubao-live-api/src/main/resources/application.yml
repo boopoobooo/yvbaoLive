@@ -12,9 +12,9 @@ dubbo:
     name: dubbo
     port: -1
   consumer:
-    timeout: 15000  # 设置 Dubbo 客户端的请求超时时间为 15 秒
+    timeout: 30000  # 设置 Dubbo 客户端的请求超时时间为 30 秒
   provider:
-    timeout: 15000  # 设置 Dubbo 服务端的请求超时时间为 15 秒
+    timeout: 30000  # 设置 Dubbo 服务端的请求超时时间为 30 秒
 
 spring:
   application:

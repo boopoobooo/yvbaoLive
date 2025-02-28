@@ -4,7 +4,6 @@ package cn.junbao.yubao.live.id.generate.dao.po;
 import java.util.Date;
 
 /**
- * @Description
  */
 public class IdGeneratePO {
 

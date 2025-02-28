@@ -81,6 +81,7 @@ public class UserPhoneServiceImpl implements IUserPhoneService {
         userPhonePO.setStatus(CommonStatusEum.VALID_STATUS.getCode());
         userPhoneMapper.insertOne(userPhonePO);
         redisTemplate.delete(userProviderCacheKeyBuilder.buildUserPhoneObjKey(phone));//删除空值对象
+        log.info("[registerAndInsertDB] 注册成功，userId = {},phone = {}",userId,phone);
         return UserLoginDTO.loginSuccess(userId,phone);
     }
 
