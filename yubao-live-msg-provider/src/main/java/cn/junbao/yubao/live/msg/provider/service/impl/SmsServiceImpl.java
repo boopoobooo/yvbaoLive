@@ -35,13 +35,20 @@ public class SmsServiceImpl implements ISmsService {
 
     @Override
     public MsgSendResultEnum sendLoginCode(String phone) {
+        log.info("[sendLoginCode] phone:{}",phone);
         //1. 基础校验
         if (StringUtils.isBlank(phone)){
             return MsgSendResultEnum.MSG_PARAM_ERROR;
         }
         //2. 校验手机号是否频繁验证
         String cacheKey = msgProviderCacheKeyBuilder.buildSmsLoginKey(phone);
-        Boolean hasKey = redisTemplate.hasKey(cacheKey);
+        Boolean hasKey = null;
+        try {
+            hasKey = redisTemplate.hasKey(cacheKey);
+        } catch (Exception e) {
+            log.error("[ERROR] e = "+e);
+            throw new RuntimeException(e);
+        }
         if (hasKey){
             log.warn("[sendLoginCode] 当前手机号验证频繁，phone = {}",phone);
             return MsgSendResultEnum.SEND_FAIL;
@@ -49,7 +56,7 @@ public class SmsServiceImpl implements ISmsService {
         //3. 生成验证码
         String loginCode = RandomStringUtils.randomNumeric(6);
         redisTemplate.opsForValue().set(cacheKey,loginCode,60, TimeUnit.SECONDS);
-        log.info("[sendLoginCode] cacheCode =  {}",redisTemplate.opsForValue().get(cacheKey));
+        log.info("[sendLoginCode] 本次验证码 =  {}",redisTemplate.opsForValue().get(cacheKey));
 
         try {
             //发送验证码

@@ -4,7 +4,7 @@ public class ImConstants {
     /**
      * 默认的magic值
      */
-    public static final short DEFAULT_MAGIC = 31242;
+    public static final short DEFAULT_MAGIC = 19231;
 
     /**
      * 用户心跳记录时间间隔（单位：毫秒）

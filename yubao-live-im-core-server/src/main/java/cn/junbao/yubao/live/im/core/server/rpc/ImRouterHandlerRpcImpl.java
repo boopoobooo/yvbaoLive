@@ -7,6 +7,8 @@ import jakarta.annotation.Resource;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @Author: Junbao
  * @Date: 2025/2/18 16:17
@@ -22,5 +24,12 @@ public class ImRouterHandlerRpcImpl implements ImRouterHandlerRpc {
     @Override
     public void sendMessage(ImMsgBody imMsgBody) {
        imRouterHandlerService.onReceive(imMsgBody);
+    }
+
+    @Override
+    public void batchSendMsg(List<ImMsgBody> imMsgBodyList) {
+        for (ImMsgBody imMsgBody : imMsgBodyList) {
+            imRouterHandlerService.onReceive(imMsgBody);
+        }
     }
 }

@@ -107,5 +107,10 @@
             <artifactId>yubao-live-im-router-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>cn.junbao</groupId>
+            <artifactId>yubao-live-living-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

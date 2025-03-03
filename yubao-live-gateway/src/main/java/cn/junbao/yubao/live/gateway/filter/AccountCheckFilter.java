@@ -1,9 +1,9 @@
 package cn.junbao.yubao.live.gateway.filter;
 
-import cn.junbao.yubao.live.account.interfaces.rpc.IAccountTokenRpc;
 import cn.junbao.yubao.live.common.interfaces.enums.GatewayHeaderEnum;
 import cn.junbao.yubao.live.common.interfaces.enums.WebRequestEnum;
-import cn.junbao.yubao.live.gateway.properties.GatewayProperties;
+import cn.junbao.yubao.live.gateway.properties.YuBaoGatewayProperties;
+import cn.junbao.yubao.live.user.interfaces.IUserAccountRpc;
 import com.alibaba.cloud.commons.lang.StringUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -29,15 +29,16 @@ import static org.springframework.web.cors.CorsConfiguration.ALL;
 @Slf4j
 public class AccountCheckFilter implements GlobalFilter, Ordered {
     @Resource
-    private GatewayProperties gatewayProperties;
-    @DubboReference
-    private IAccountTokenRpc accountTokenRpc;
+    private YuBaoGatewayProperties yuBaoGatewayProperties;
+
+    @DubboReference(check = false)
+    private IUserAccountRpc userAccountRpc;
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String requestPath = request.getPath().value();
         ServerHttpResponse response = exchange.getResponse();
-        //跨域设置 【暂时hardCode写死】
+        //跨域设置 【暂时写死】
         HttpHeaders headers = response.getHeaders();
         headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "http://web.yubao.live.com:5500");
         headers.add(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST, GET");
@@ -51,10 +52,13 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
             return Mono.empty();
         }
 
-        // 检查请求路径是否在白名单中
-        if (gatewayProperties.getWhileList().contains(requestPath)) {
-            log.info("Request path {} is in the whitelist, allowing access", requestPath);
-            return chain.filter(exchange); // 放行
+        // 检查请求路径是否在白名单中或以白名单路径为前缀
+        List<String> whiteList = yuBaoGatewayProperties.getWhileList();
+        for (String whiteListPath : whiteList) {
+            if (requestPath.startsWith(whiteListPath)) {
+                log.info("请求路径 {} matches whitelist prefix {}, allowing access", requestPath, whiteListPath);
+                return chain.filter(exchange); // 放行
+            }
         }
 
         //取出cookie并进行校验
@@ -69,7 +73,7 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
             return Mono.empty();
         }
         //校验cookie
-        Long userId = accountTokenRpc.getUserIdByToken(token);
+        Long userId = userAccountRpc.getUserIdByToken(token);
         if (userId == null) {
             log.warn("[AccountCheckFilter]cookie校验失败,cookie已经失效");
             return Mono.empty();
@@ -77,6 +81,7 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
         //校验成功，将userid传入下游并放行
         ServerHttpRequest.Builder builder = request.mutate();
         builder.header(GatewayHeaderEnum.USER_LOGIN_ID.getName(), String.valueOf(userId));
+        log.info("[AccountCheckFilter]请求头信息：{}",builder.build().getHeaders().get(GatewayHeaderEnum.USER_LOGIN_ID.getName()));
         return chain.filter(exchange.mutate().request(builder.build()).build());
     }
 

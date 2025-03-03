@@ -28,6 +28,7 @@ public class ImRouterProviderApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         ImMsgBody imMsgBody =new ImMsgBody();
+        imMsgBody.setData("====test====");
         imRouterService.sendMsg(imMsgBody);
         System.out.println("========test=======END===============");
         Thread.sleep(3000);

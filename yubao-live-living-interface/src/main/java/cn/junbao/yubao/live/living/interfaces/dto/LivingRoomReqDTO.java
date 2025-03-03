@@ -24,7 +24,7 @@ public class LivingRoomReqDTO implements Serializable {
     private Long anchorId; //主播id
     private Long pkObjId;//pk 对象id
     private String roomName;
-    private Long roomId;
+    private Integer roomId;
     private String covertImg;
     private Integer type;
     private Integer appId;

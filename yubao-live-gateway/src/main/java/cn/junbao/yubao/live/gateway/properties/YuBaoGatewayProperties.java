@@ -11,6 +11,6 @@ import java.util.List;
 @ConfigurationProperties(prefix = "yubao.gateway")
 @Configuration
 @RefreshScope
-public class GatewayProperties {
+public class YuBaoGatewayProperties {
     private List<String> whileList;
 }

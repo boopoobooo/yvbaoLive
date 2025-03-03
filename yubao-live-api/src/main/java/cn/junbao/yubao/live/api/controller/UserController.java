@@ -1,5 +1,6 @@
 package cn.junbao.yubao.live.api.controller;
 
+import cn.junbao.yubao.live.common.interfaces.vo.WebResponseVO;
 import cn.junbao.yubao.live.user.dto.UserDTO;
 import cn.junbao.yubao.live.user.interfaces.IUserRpc;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -20,16 +21,18 @@ public class UserController {
 
     Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @GetMapping("/getUserInfo")
-    public UserDTO getUserInfo(@RequestParam Long userId){
-        logger.info("API   getUserInfo 开始,{}",userId);
-        return userRpc.getUserById(userId);
+    @PostMapping("/getUserInfo")
+    public WebResponseVO getUserInfo(@RequestParam Long userId){
+        logger.info("getUserInfo 开始,{}",userId);
+        UserDTO userDTO = userRpc.getUserById(userId);
+        return WebResponseVO.success(userDTO);
     }
 
     @GetMapping("/batchQueryUserInfo")
-    public Map<Long,UserDTO> batchQueryUserInfo(String userIdsStr){
+    public WebResponseVO batchQueryUserInfo(String userIdsStr){
         List<Long> userIds = Arrays.asList(userIdsStr.split(",")).stream().map(x -> Long.valueOf(x)).collect(Collectors.toList());
-        return userRpc.batchQueryUserInfo(userIds);
+        Map<Long, UserDTO> longUserDTOMap = userRpc.batchQueryUserInfo(userIds);
+        return WebResponseVO.success();
     }
 
     @GetMapping("/test")

@@ -7,6 +7,7 @@ import cn.junbao.yubao.live.user.provider.dao.mapper.IUserMapper;
 import cn.junbao.yubao.live.user.provider.dao.po.UserPO;
 import cn.junbao.yubao.live.user.provider.service.IUserService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements IUserService {
     @Resource
     private IUserMapper userMapper;
@@ -57,6 +59,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public Map<Long, UserDTO> batchQueryUserInfo(List<Long> userIdList) {
 
+        log.info("batchQueryUserInfo userId的集合为:{}",userIdList);
         //1. 查询缓存
         List<String> cacheKeyList = new ArrayList<>();
         userIdList.forEach(userId -> {
@@ -82,7 +85,6 @@ public class UserServiceImpl implements IUserService {
         userIdsMap.values().parallelStream().forEach(queryUserIdList -> {
             userDTOInDBList.addAll(ConvertBeanUtils.convertList(userMapper.getBatchByUserIds(queryUserIdList),UserDTO.class));
         });
-        //todo parallelStream导致 dubbo日志刷屏
         if (!userDTOInDBList.isEmpty()){
             //2.3 将从DB中查询的数据 加载到缓存中
             Map<String, UserDTO> userDTOInDBMap = userDTOInDBList.stream().collect(Collectors.toMap(userDTO -> cacheKeyBuilder.buildUserInfoKey(userDTO.getUserId()), x -> x));

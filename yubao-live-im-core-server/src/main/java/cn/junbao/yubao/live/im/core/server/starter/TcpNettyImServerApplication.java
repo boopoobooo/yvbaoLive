@@ -1,11 +1,10 @@
 package cn.junbao.yubao.live.im.core.server.starter;
 
-import cn.junbao.yubao.im.core.server.constants.ImCoreServerConstants;
-import cn.junbao.yubao.live.im.constants.ImConstants;
 import cn.junbao.yubao.live.im.core.server.common.ChannelHandlerContextCache;
 import cn.junbao.yubao.live.im.core.server.common.ImMsgDecoder;
 import cn.junbao.yubao.live.im.core.server.common.ImMsgEncoder;
-import cn.junbao.yubao.live.im.core.server.handler.ImServerCoreHandler;
+import cn.junbao.yubao.live.im.core.server.handler.tcp.TcpImServerCoreHandler;
+import com.alibaba.cloud.commons.lang.StringUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -13,24 +12,18 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import jakarta.annotation.Resource;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.StringUtils;
-
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Configuration
-@Getter
-@Setter
-public class NettyImServerApplication implements InitializingBean {
+public class TcpNettyImServerApplication implements InitializingBean {
     //指定端口
+    @Value("${yubao.im.tcp.port}")
     private int port;
     @Value("${spring.application.registryIp}")
     private String registryIp;
@@ -38,7 +31,7 @@ public class NettyImServerApplication implements InitializingBean {
     private String registryPort;
 
     @Resource
-    private ImServerCoreHandler imServerCoreHandler;
+    private TcpImServerCoreHandler tcpImServerCoreHandler;
 
     @Resource
     private Environment environment;
@@ -47,8 +40,7 @@ public class NettyImServerApplication implements InitializingBean {
     private RedisTemplate<String,String> redisTemplate;
 
     //基于netty启动java进程
-    public void startApplication(int port) throws InterruptedException {
-        setPort(port);
+    public void startApplication() throws InterruptedException {
         //处理accept
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         //处理read && write
@@ -60,21 +52,22 @@ public class NettyImServerApplication implements InitializingBean {
         bootstrap.childHandler(new ChannelInitializer<>() {
             @Override
             protected void initChannel(Channel channel) throws Exception {
-                log.info("[NettyImServerApplication] 初始化连接渠道");
+                log.info("[TCP-NettyImServerApplication] 初始化连接渠道");
                 //添加消息编解码器
                 channel.pipeline().addLast(new ImMsgEncoder());
                 channel.pipeline().addLast(new ImMsgDecoder());
                 //添加消息处理器
-                channel.pipeline().addLast(imServerCoreHandler);
+                channel.pipeline().addLast(tcpImServerCoreHandler);
             }
         });
         //获取im的服务注册ip和暴露端口
         /*String registryIp = environment.getProperty("DUBBO_IP_TO_REGISTRY");
         String registryPort = environment.getProperty("DUBBO_PORT_TO_REGISTRY");*/
-        if (StringUtils.isEmpty(registryPort) || StringUtils.isEmpty(registryIp)) {
-            throw new IllegalArgumentException("启动参数中的注册端口和注册ip不能为空");
+        //获取im的服务注册ip和暴露端口
+        if (StringUtils.isBlank(registryPort) || StringUtils.isBlank(registryIp)) {
+            throw new IllegalArgumentException("配置信息中的启动参数的注册端口和注册ip不能为空");
         }
-        //加入到本地缓存中
+        //加入到Channel本地缓存中
         ChannelHandlerContextCache.setServerIpAddress(registryIp+":"+registryPort);
 
         //基于jvm钩子函数实现优雅关闭效果
@@ -83,7 +76,7 @@ public class NettyImServerApplication implements InitializingBean {
             workerGroup.shutdownGracefully();
         }));
         ChannelFuture channelFuture = bootstrap.bind(port).sync();
-        log.info("启动成功，监听端口：{}",getPort());
+        log.info("启动成功，监听端口：{}",port);
         //阻塞主线程实现服务长时间启动效果
         channelFuture.channel().closeFuture().sync();
 
@@ -93,13 +86,13 @@ public class NettyImServerApplication implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         Thread nettyImServerThread = new Thread(()->{
             try {
-                startApplication(9090);
+                startApplication();
             } catch (InterruptedException e) {
                 log.error("ERROR: "+ e);
                 throw new RuntimeException(e);
             }
         });
-        nettyImServerThread.setName("yubao-live-im-core-NettyCoreThread");
+        nettyImServerThread.setName("yubao-live-im-core-TCP-NettyCoreThread");
         nettyImServerThread.start();
     }
 }

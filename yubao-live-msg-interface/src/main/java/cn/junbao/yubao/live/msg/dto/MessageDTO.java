@@ -21,6 +21,8 @@ public class MessageDTO {
     private String senderName;
 
     private Long objectId;
+
+    private Integer roomId ;
     /**
      * 消息类型
      */

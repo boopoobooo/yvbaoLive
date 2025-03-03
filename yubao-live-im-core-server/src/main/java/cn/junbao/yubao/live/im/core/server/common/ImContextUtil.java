@@ -4,7 +4,13 @@ import io.netty.channel.ChannelHandlerContext;
 
 public class ImContextUtil {
 
+    public static Integer getRoomId(ChannelHandlerContext ctx) {
+        return ctx.attr(ImContextAttr.ROOM_ID).get();
+    }
 
+    public static void setRoomId(ChannelHandlerContext ctx, int roomId) {
+        ctx.attr(ImContextAttr.ROOM_ID).set(roomId);
+    }
     public static void setAppId(ChannelHandlerContext ctx, int appId) {
         ctx.attr(ImContextAttr.APP_ID).set(appId);
     }

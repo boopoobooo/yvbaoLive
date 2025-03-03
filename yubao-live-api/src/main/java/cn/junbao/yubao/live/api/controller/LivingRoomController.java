@@ -3,6 +3,7 @@ package cn.junbao.yubao.live.api.controller;
 import cn.junbao.yubao.live.api.service.ILivingRoomService;
 import cn.junbao.yubao.live.api.vo.LivingRoomInitVO;
 import cn.junbao.yubao.live.common.interfaces.vo.WebResponseVO;
+import cn.junbao.yubao.live.framework.web.strater.context.WebRequestContext;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +35,7 @@ public class LivingRoomController {
 
     @PostMapping("/startingLiving")
     public WebResponseVO startingLiving(Integer type) {
-        Long roomId = livingRoomService.startLiving(type);
+        Integer roomId = livingRoomService.startLiving(type);
         LivingRoomInitVO initVO = new LivingRoomInitVO();
         initVO.setRoomId(roomId);
         return WebResponseVO.success(initVO);
@@ -42,11 +43,21 @@ public class LivingRoomController {
 
 
     @PostMapping("/closeLiving")
-    public WebResponseVO closeLiving(Long roomId) {
+    public WebResponseVO closeLiving(Integer roomId) {
         boolean closeStatus = livingRoomService.closeLiving(roomId);
         if (closeStatus) {
             return WebResponseVO.success();
         }
         return WebResponseVO.bizError("关播异常");
+    }
+
+    /**
+     * 获取主播相关配置信息（只有主播才会有权限）
+     *
+     * @return
+     */
+    @PostMapping("/anchorConfig")
+    public WebResponseVO anchorConfig(Integer roomId) {
+        return WebResponseVO.success(livingRoomService.anchorConfig(WebRequestContext.getUserId(), roomId));
     }
 }

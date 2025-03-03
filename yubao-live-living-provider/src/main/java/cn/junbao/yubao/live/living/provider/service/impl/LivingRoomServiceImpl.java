@@ -1,5 +1,7 @@
 package cn.junbao.yubao.live.living.provider.service.impl;
 
+import cn.junbao.yubao.im.core.server.dto.ImOfflineDTO;
+import cn.junbao.yubao.im.core.server.dto.ImOnlineDTO;
 import cn.junbao.yubao.live.common.interfaces.enums.CommonStatusEum;
 import cn.junbao.yubao.live.common.interfaces.utils.ConvertBeanUtils;
 import cn.junbao.yubao.live.framework.redis.starter.key.LivingProviderCacheKeyBuilder;
@@ -16,7 +18,9 @@ import cn.junbao.yubao.live.user.interfaces.IUserRpc;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,7 +54,49 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
     private LivingProviderCacheKeyBuilder cacheKeyBuilder;
 
     @Override
-    public LivingRoomRespDTO queryByRoomId(Long roomId) {
+    public List<Long> queryUserIdByRoomId(LivingRoomReqDTO livingRoomReqDTO) {
+        Integer roomId = livingRoomReqDTO.getRoomId();
+        Integer appId = livingRoomReqDTO.getAppId();
+        String cacheKey = cacheKeyBuilder.buildLivingRoomUserSetKey(roomId, appId);
+        //通过多次scan，避免一次性获取大量数据导致可能的卡顿
+        Cursor<Object> cursor = redisTemplate.opsForSet().scan(cacheKey, ScanOptions.scanOptions().match("*").count(100).build());
+        List<Long> userIdList = new ArrayList<>();
+        while (cursor.hasNext()) {
+            Integer userId = (Integer) cursor.next();
+            userIdList.add(Long.valueOf(userId));
+        }
+        log.info("[queryUserIdByRoomId] userIdList size = {}",userIdList.size());
+        return userIdList;
+    }
+
+    @Override
+    public void userOfflineHandler(ImOfflineDTO imOfflineDTO) {
+        log.info("[userOfflineHandler]imOfflineDTO is {}", imOfflineDTO);
+        Long userId = imOfflineDTO.getUserId();
+        Integer roomId = imOfflineDTO.getRoomId();
+        Integer appId = imOfflineDTO.getAppId();
+        String cacheKey = cacheKeyBuilder.buildLivingRoomUserSetKey(roomId, appId);
+        redisTemplate.delete(cacheKey);
+    }
+
+    @Override
+    public void userOnlineHandler(ImOnlineDTO imOnlineDTO) {
+        log.info("[userOnlineHandler]imOnlineDTO is {}", imOnlineDTO);
+        Long userId = imOnlineDTO.getUserId();
+        Integer roomId = imOnlineDTO.getRoomId();
+        Integer appId = imOnlineDTO.getAppId();
+        String cacheKey = cacheKeyBuilder.buildLivingRoomUserSetKey(roomId, appId);
+        //set集合中
+        redisTemplate.opsForSet().add(cacheKey, userId);
+        redisTemplate.expire(cacheKey, 12, TimeUnit.HOURS);
+    }
+
+    @Override
+    public LivingRoomRespDTO queryByRoomId(Integer roomId) {
+        log.info("[queryByRoomId]  roomId = {}",roomId);
+        if (roomId == null ){
+            return null;
+        }
         String cacheKey = cacheKeyBuilder.buildLivingRoomObjKey(roomId);
         LivingRoomRespDTO cacheResult = (LivingRoomRespDTO) redisTemplate.opsForValue().get(cacheKey);
         if (cacheResult != null) {
@@ -64,6 +110,7 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
         LivingRoomPO livingRoomPO = livingRoomMapper.selectOneByRoomId(roomId);
         LivingRoomRespDTO queryResult = ConvertBeanUtils.convert(livingRoomPO, LivingRoomRespDTO.class);
         if (queryResult == null) {
+            log.warn("[queryByRoomId] roomId = {} not found",roomId);
             //防止缓存击穿
             redisTemplate.opsForValue().set(cacheKey, new LivingRoomRespDTO(), 1, TimeUnit.MINUTES);
             return null;
@@ -73,7 +120,7 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
     }
 
     @Override
-    public Long startLivingRoom(LivingRoomReqDTO livingRoomReqDTO) {
+    public Integer startLivingRoom(LivingRoomReqDTO livingRoomReqDTO) {
 
         LivingRoomPO livingRoomPO = ConvertBeanUtils.convert(livingRoomReqDTO, LivingRoomPO.class);
         livingRoomPO.setStatus(CommonStatusEum.VALID_STATUS.getCode());
@@ -89,7 +136,7 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
     @Transactional(rollbackFor = Exception.class)
     public boolean closeLiving(LivingRoomReqDTO livingRoomReqDTO) {
         Long anchorId = livingRoomReqDTO.getAnchorId();
-        Long roomId = livingRoomReqDTO.getRoomId();
+        Integer roomId = livingRoomReqDTO.getRoomId();
 
         LivingRoomPO livingRoomPO= livingRoomMapper.selectByRoomId(roomId);
         if (livingRoomPO == null){

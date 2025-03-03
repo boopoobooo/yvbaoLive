@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum ImMsgBizCodeEnum {
-    LIVING_ROOM_IM_BIZ("501","直播间内聊天消息");
+    LIVING_ROOM_IM_BIZ("5555","直播间内聊天消息");
     final String  code;
     final String desc;
 }

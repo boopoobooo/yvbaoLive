@@ -58,6 +58,7 @@ public class WebResponseVO {
         WebResponseVO webResponseVO = new WebResponseVO();
         webResponseVO.setCode(200);
         webResponseVO.setMsg("success");
+        webResponseVO.setData("success");
         return webResponseVO;
     }
 

@@ -1,6 +1,5 @@
 package cn.junbao.yubao.live.api.service.impl;
 
-import cn.junbao.yubao.live.account.interfaces.rpc.IAccountTokenRpc;
 import cn.junbao.yubao.live.api.service.IUserLoginService;
 import cn.junbao.yubao.live.api.vo.UserLoginVO;
 import cn.junbao.yubao.live.api.vo.req.UserPhoneLoginReqVO;
@@ -94,9 +93,9 @@ public class UserLoginServiceImpl implements IUserLoginService {
     private void saveTokenInCookie(String loginToken,HttpServletResponse response){
         Cookie cookie = new Cookie(WebRequestEnum.COOKIE_TOKEN_NAME.getName(), loginToken);
         //设置顶级域名，接着我们的二级域名中进行web页面的访问，后续请求就会携带上token
-        cookie.setDomain("yubao.live.com");
         cookie.setPath("/");
         cookie.setMaxAge(30 * 24 * 3600);
         response.addCookie(cookie);
+        log.info("[saveTokenInCookie] cookie设置成功");
     }
 }

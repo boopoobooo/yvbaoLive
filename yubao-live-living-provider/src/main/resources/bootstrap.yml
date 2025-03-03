@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: yubao-live-living-room-provider # 服务名称
+  profiles:
+    active: dev # 当前使用dev环境
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml
+        group: DEFAULT_GROUP
+
+mybatis:
+  mapper-locations: classpath:/mybatis/mapper/*.xml
+  config-location: classpath:/mybatis/config/mybatis-config.xml
+
+

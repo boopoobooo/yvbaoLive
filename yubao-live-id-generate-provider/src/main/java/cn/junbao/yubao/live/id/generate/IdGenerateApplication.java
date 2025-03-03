@@ -14,23 +14,35 @@ import java.util.HashSet;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableDubbo
-public class IdGenerateApplication implements CommandLineRunner {
+public class IdGenerateApplication implements CommandLineRunner{
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(IdGenerateApplication.class);
         springApplication.setWebApplicationType(WebApplicationType.NONE);
         springApplication.run(args);
+
+        new Thread(
+                ()->{
+                    synchronized (IdGenerateApplication.class){
+                        try {
+                            IdGenerateApplication.class.wait();
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).start();
     }
 
-    @Resource
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println("======================");
+    }
+
+    /*@Resource
     private IdGenerateService idGenerateService;
     @Override
     public void run(String... args) throws Exception {
-        HashSet<Long> hashSet = new HashSet<>();
-        for (int i = 0; i < 1000; i++) {
-            Long id = idGenerateService.getUnSeqId(1);
-            System.out.println(id);
-            hashSet.add(id);
-        }
-        System.out.println(hashSet.size());
-    }
+        Long id = idGenerateService.getUnSeqId(1);
+        System.out.println("================="+id);
+    }*/
 }

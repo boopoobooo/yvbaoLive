@@ -21,12 +21,12 @@ public class LivingRoomRpcImpl implements ILivingRoomRpc {
     private ILivingRoomService livingRoomService;
 
     @Override
-    public LivingRoomRespDTO queryByRoomId(Long roomId) {
+    public LivingRoomRespDTO queryByRoomId(Integer roomId) {
         return livingRoomService.queryByRoomId(roomId);
     }
 
     @Override
-    public Long startLivingRoom(LivingRoomReqDTO livingRoomReqDTO) {
+    public Integer startLivingRoom(LivingRoomReqDTO livingRoomReqDTO) {
         return livingRoomService.startLivingRoom(livingRoomReqDTO);
     }
 
@@ -38,5 +38,9 @@ public class LivingRoomRpcImpl implements ILivingRoomRpc {
     @Override
     public List<LivingRoomRespDTO> list(Integer type, int pageNum, int pageSize) {
         return livingRoomService.getLivingRoomPage(type,pageNum,pageSize);
+    }
+
+    public List<Long> queryUserIdByRoomId(LivingRoomReqDTO livingRoomReqDTO){
+        return livingRoomService.queryUserIdByRoomId(livingRoomReqDTO);
     }
 }

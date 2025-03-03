@@ -32,8 +32,6 @@
         <module>yubao-live-gateway</module>
         <module>yubao-live-msg-interface</module>
         <module>yubao-live-msg-provider</module>
-        <module>yubao-live-account-interfaces</module>
-        <module>yubao-live-account-provider</module>
         <module>yubao-live-framework/yubao-live-framework-web-starter</module>
         <module>yubao-live-im-core-server</module>
         <module>yubao-live-im-interface</module>

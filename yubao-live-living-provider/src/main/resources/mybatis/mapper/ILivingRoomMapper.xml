@@ -56,7 +56,7 @@
     </select>
     <select id="selectOneByRoomId" resultMap="dataMap">
         select * from living_room
-        where roomId = #{roomId} and status = ture
+        where room_id = #{roomId} and status = 1
         limit 1
    </select>
 

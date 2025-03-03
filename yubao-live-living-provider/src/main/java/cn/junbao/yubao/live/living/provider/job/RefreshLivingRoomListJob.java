@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 启动服务之后，每隔一段时间去同步下直播间信息到redis的数据
- *
+ *  即页面展示的 直播间列表信息
  */
 @Configuration
 @Slf4j

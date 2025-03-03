@@ -11,17 +11,23 @@ import lombok.ToString;
 @ToString
 public class LivingRoomInitVO {
 
-    private Long roomId;
+    private Integer roomId;
     private Long anchorId;
     private Long userId;
     private String anchorImg;
     private String roomName;
     private String avatar;
+    /**
+     * 当前用户是否为当前房间主播
+     */
+    private boolean isAnchor;
     private String watcherNickName;
     //主播头像
     private String anchorNickName;
     //观众头像
     private String watcherAvatar;
+    //默认的 背景图片
+    private String defaultBgImg;
 
 
 }
