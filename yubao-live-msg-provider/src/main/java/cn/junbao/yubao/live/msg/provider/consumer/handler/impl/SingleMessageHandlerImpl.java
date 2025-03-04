@@ -43,7 +43,6 @@ public class SingleMessageHandlerImpl implements IMessageHandler {
             Integer roomId = messageDTO.getRoomId();
             LivingRoomReqDTO livingRoomReqDTO = new LivingRoomReqDTO();
             livingRoomReqDTO.setRoomId(roomId);
-            livingRoomReqDTO.setAppId(imMsgBody.getAppId());
             List<Long> userIdList = livingRoomRpc.queryUserIdByRoomId(livingRoomReqDTO);
             if (CollectionUtils.isEmpty(userIdList)){
                 log.info("[onMesReceive] 当前房间没有用户，不能发送消息");

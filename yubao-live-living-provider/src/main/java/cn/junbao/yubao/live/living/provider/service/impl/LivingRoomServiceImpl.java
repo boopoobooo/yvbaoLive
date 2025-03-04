@@ -57,7 +57,8 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
     public List<Long> queryUserIdByRoomId(LivingRoomReqDTO livingRoomReqDTO) {
         Integer roomId = livingRoomReqDTO.getRoomId();
         Integer appId = livingRoomReqDTO.getAppId();
-        String cacheKey = cacheKeyBuilder.buildLivingRoomUserSetKey(roomId, appId);
+        String cacheKey = cacheKeyBuilder.buildLivingRoomUserSetKey(roomId);
+        log.info("[queryUserIdByRoomId]cacheKey = {}",cacheKey);
         //通过多次scan，避免一次性获取大量数据导致可能的卡顿
         Cursor<Object> cursor = redisTemplate.opsForSet().scan(cacheKey, ScanOptions.scanOptions().match("*").count(100).build());
         List<Long> userIdList = new ArrayList<>();
@@ -75,7 +76,7 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
         Long userId = imOfflineDTO.getUserId();
         Integer roomId = imOfflineDTO.getRoomId();
         Integer appId = imOfflineDTO.getAppId();
-        String cacheKey = cacheKeyBuilder.buildLivingRoomUserSetKey(roomId, appId);
+        String cacheKey = cacheKeyBuilder.buildLivingRoomUserSetKey(roomId);
         redisTemplate.delete(cacheKey);
     }
 
@@ -85,7 +86,7 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
         Long userId = imOnlineDTO.getUserId();
         Integer roomId = imOnlineDTO.getRoomId();
         Integer appId = imOnlineDTO.getAppId();
-        String cacheKey = cacheKeyBuilder.buildLivingRoomUserSetKey(roomId, appId);
+        String cacheKey = cacheKeyBuilder.buildLivingRoomUserSetKey(roomId);
         //set集合中
         redisTemplate.opsForSet().add(cacheKey, userId);
         redisTemplate.expire(cacheKey, 12, TimeUnit.HOURS);

@@ -58,6 +58,7 @@ public class LivingRoomController {
      */
     @PostMapping("/anchorConfig")
     public WebResponseVO anchorConfig(Integer roomId) {
+        log.info("[anchorConfig] roomId = {}",roomId);
         return WebResponseVO.success(livingRoomService.anchorConfig(WebRequestContext.getUserId(), roomId));
     }
 }

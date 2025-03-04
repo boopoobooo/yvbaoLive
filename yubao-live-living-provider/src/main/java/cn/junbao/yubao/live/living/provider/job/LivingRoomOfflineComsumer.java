@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class LivingRoomOfflineComsumer {
-    @Value("${spring.rabbitmq.topic.yubao_living_room_offline_topic}")
+    @Value("${spring.rabbitmq.topic.im_offline_topic}")
     private String topic;
     @Resource
     private ILivingRoomService livingRoomService;
@@ -27,7 +27,7 @@ public class LivingRoomOfflineComsumer {
      * 处理用户加入直播间的 上线消息
      * @param message
      */
-    @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.yubao_living_room_offline_topic}"))
+    @RabbitListener(queuesToDeclare = @Queue(value = "${spring.rabbitmq.topic.im_offline_topic}"))
     public void listener(String message) {
         log.info("[LivingRoomOfflineComsumer]监听消息 topic: {} message: {}", topic, message);
         // 1. 转换消息
