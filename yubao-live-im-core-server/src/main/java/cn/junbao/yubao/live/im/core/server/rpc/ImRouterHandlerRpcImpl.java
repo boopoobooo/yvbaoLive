@@ -4,6 +4,7 @@ import cn.junbao.yubao.im.core.server.interfaces.ImRouterHandlerRpc;
 import cn.junbao.yubao.live.im.core.server.service.ImRouterHandlerService;
 import cn.junbao.yubao.live.im.dto.ImMsgBody;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @Description:
  */
 @DubboService
+@Slf4j
 public class ImRouterHandlerRpcImpl implements ImRouterHandlerRpc {
 
 
@@ -23,6 +25,7 @@ public class ImRouterHandlerRpcImpl implements ImRouterHandlerRpc {
 
     @Override
     public void sendMessage(ImMsgBody imMsgBody) {
+
        imRouterHandlerService.onReceive(imMsgBody);
     }
 

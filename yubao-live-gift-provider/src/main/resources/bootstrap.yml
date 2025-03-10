@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: yubao-live-gift-provider # 服务名称
+  profiles:
+    active: dev # 当前使用dev环境
+  cloud:
+    nacos:
+      config:
+        server-addr: localhost:8848
+        file-extension: yaml
+        group: DEFAULT_GROUP # 可选，默认是 DEFAULT_GROUP
+

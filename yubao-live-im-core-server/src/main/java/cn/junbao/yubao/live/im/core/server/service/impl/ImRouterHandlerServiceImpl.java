@@ -46,7 +46,7 @@ public class ImRouterHandlerServiceImpl implements ImRouterHandlerService {
             imMsgBody.setMsgId(UUID.randomUUID().toString());
             ImMsg respMsg = ImMsg.build(ImMsgTypeCode.IM_BIZ_MSG.getCode(), JSON.toJSONString(imMsgBody));
             //用户在线,才推送消息
-            log.info("[sendMsgToClient] writeAndFlush, userid = {},data = {}",imMsgBody.getUserId(),imMsgBody.getData());
+            log.info("[sendMsgToClient] 发送给客户端writeAndFlush, userid = {},data = {}",imMsgBody.getUserId(),imMsgBody.getData());
             channelHandlerContext.writeAndFlush(respMsg);
             return true;
         }

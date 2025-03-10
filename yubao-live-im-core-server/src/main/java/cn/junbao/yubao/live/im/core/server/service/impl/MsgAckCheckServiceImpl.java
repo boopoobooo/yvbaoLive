@@ -33,7 +33,9 @@ public class MsgAckCheckServiceImpl implements IMsgAckCheckService {
         //移除redis中的记录
         int appId = imMsgBody.getAppId();
         Long userId = imMsgBody.getUserId();
-        redisTemplate.delete(imCoreServerCacheKeyBuilder.buildImMsgAckMapKey(appId,userId));
+        String cacheKey = imCoreServerCacheKeyBuilder.buildImMsgAckMapKey(appId, userId);
+        log.info("[doMsgAck] ACK消息确认 ， 当前的cacheKey = {}",cacheKey);
+        redisTemplate.delete(cacheKey);
     }
 
     @Override
@@ -41,6 +43,7 @@ public class MsgAckCheckServiceImpl implements IMsgAckCheckService {
         int appId = imMsgBody.getAppId();
         Long userId = imMsgBody.getUserId();
         String msgId = imMsgBody.getMsgId();
+        log.info("[recordMsgAck] 记录ACK消息: userId={}, msgId={}, times={}",userId,msgId,times);
         redisTemplate.opsForHash().put(imCoreServerCacheKeyBuilder.buildImMsgAckMapKey(appId,userId),msgId,times);
     }
 

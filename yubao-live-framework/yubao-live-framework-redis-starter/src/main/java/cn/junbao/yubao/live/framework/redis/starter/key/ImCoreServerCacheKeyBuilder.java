@@ -14,11 +14,11 @@ public class ImCoreServerCacheKeyBuilder extends RedisKeyBuilder {
     private static final String IM_MSG_ACK_MAP = "im_Msg_ACK_Map";
 
     public String buildImUserOnline(Integer appId,Long userId ) {
-        return super.getPrefix() + IM_USER_ONLINE_RECORD + super.getSplitItem()+appId + super.getSplitItem()+userId % 10000;
+        return super.getPrefix() + IM_USER_ONLINE_RECORD + super.getSplitItem()+appId + super.getSplitItem()+userId;
     }
 
     public String buildImMsgAckMapKey(Integer appId,Long userId ) {
-        return super.getPrefix()+IM_MSG_ACK_MAP+super.getSplitItem()+appId+super.getSplitItem()+userId%100;
+        return super.getPrefix()+IM_MSG_ACK_MAP+super.getSplitItem()+appId+super.getSplitItem()+userId;
     }
 
 

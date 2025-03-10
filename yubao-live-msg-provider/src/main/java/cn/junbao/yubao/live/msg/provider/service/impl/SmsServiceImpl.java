@@ -60,12 +60,15 @@ public class SmsServiceImpl implements ISmsService {
 
         try {
             //发送验证码
-            //sendMockSms(phone,loginCode);
-            boolean sendSmsStatus = aliyunSmsUtil.sendAliyunSms(aliyunSmsProperties.getTemplateCode(), phone, loginCode);
+            sendMockSms(phone,loginCode);
+            /**
+             * 测试阶段，使用模拟发送短信
+             */
+            //boolean sendSmsStatus = aliyunSmsUtil.sendAliyunSms(aliyunSmsProperties.getTemplateCode(), phone, loginCode);
             //插入数据库
-            if (sendSmsStatus){
-                insertOne(phone,loginCode);//插入短信记录
-            }
+//            if (sendSmsStatus){
+//                insertOne(phone,loginCode);//插入短信记录
+//            }
         } catch (Exception e) {
             log.error("[sendLoginCode]ERROR:"+e);
             throw new RuntimeException(e);
@@ -103,6 +106,7 @@ public class SmsServiceImpl implements ISmsService {
         //模拟发送短信服务
         try {
             log.info(" ============= 创建短信发送通道中 ============= ,phone is {},code is {}", phone, loginCode);
+            log.info("[========短信验证码为= {}]",loginCode);
             Thread.sleep(1000);
             log.info(" ============= 短信已经发送成功 ============= ");
         } catch (InterruptedException e) {

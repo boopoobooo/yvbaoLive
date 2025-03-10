@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.junbao.yubao.live.bank.provider.dao.mapper.ICurrencyAccountMapper">
+
+    <resultMap id="dataMap" type="cn.junbao.yubao.live.bank.provider.dao.po.CurrencyAccountPO">
+        <id property="id" column="id" />
+        <result property="userId" column="user_id"/>
+        <result property="currentBalance" column="current_balance"/>
+        <result property="totalCharged" column="total_charged"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <insert id="insertOne" parameterType="cn.junbao.yubao.live.bank.provider.dao.po.CurrencyAccountPO">
+        INSERT INTO currency_account (user_id, current_balance, total_charged, status, create_time, update_time)
+        VALUES (#{userId}, #{currentBalance}, #{totalCharged}, #{status}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="incr" parameterType="map">
+        update currency_account
+        set current_balance = current_balance + #{num}
+        where user_id = #{userId}
+    </update>
+    <select id="queryBalance" parameterType="long" resultMap="dataMap">
+        select current_balance
+        from currency_account
+        where user_id = #{userId} and status = 1
+            limit 1
+    </select>
+    <update id="decr" parameterType="map">
+        update currency_account
+        set current_balance = current_balance - #{num}
+        where user_id = #{userId}
+    </update>
+
+</mapper>

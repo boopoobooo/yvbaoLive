@@ -29,7 +29,6 @@ public class ImMsgConsumer{
     public void listener(String message) {
         log.info("监听消息 topic: {} message: {}", topic, message);
         // 1. 转换消息
-
         ImMsgBody imMsgBody = JSON.parseObject(message, ImMsgBody.class);
         iMessageHandler.onMesReceive(imMsgBody);
     }

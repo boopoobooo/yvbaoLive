@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class LivingRoomServiceImpl implements ILivingRoomService {
 
-    @DubboReference
+    @DubboReference(check = false)
     private IUserRpc userRpc;
 
     @Resource

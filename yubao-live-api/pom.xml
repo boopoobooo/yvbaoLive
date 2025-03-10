@@ -46,10 +46,26 @@
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
             <version>3.1.5</version>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${alibaba-fastjson.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>fastjson2</artifactId>
+                    <groupId>com.alibaba.fastjson2</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <!--工程项目-->
         <dependency>
             <groupId>cn.junbao</groupId>
             <artifactId>yubao-live-living-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.junbao</groupId>
+            <artifactId>yubao-live-framework-mq-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -82,6 +98,12 @@
             <artifactId>yubao-live-im-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>cn.junbao</groupId>
+            <artifactId>yubao-live-gift-interface</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
 </project>

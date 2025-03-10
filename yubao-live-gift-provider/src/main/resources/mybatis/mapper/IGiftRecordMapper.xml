@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.junbao.yubao.live.gift.provider.dao.mapper.IGiftRecordMapper">
+
+    <resultMap id="dataMap" type="cn.junbao.yubao.live.gift.provider.dao.po.GiftRecordPO">
+        <id property="id" column="id" />
+        <result property="userId" column="user_id" />
+        <result property="objectId" column="object_id" />
+        <result property="source" column="source" />
+        <result property="price" column="price" />
+        <result property="priceUnit" column="price_unit" />
+        <result property="giftId" column="gift_id" />
+        <result property="sendTime" column="send_time" />
+    </resultMap>
+
+    <select id="getGiftRecordById" resultMap="dataMap">
+        SELECT * FROM gift_record WHERE id = #{id}
+    </select>
+
+    <select id="getGiftRecordList" resultMap="dataMap">
+        SELECT * FROM gift_record
+    </select>
+
+    <insert id="insertOne" parameterType="cn.junbao.yubao.live.gift.provider.dao.po.GiftRecordPO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO gift_record (id, user_id, object_id, source, price, price_unit, gift_id, send_time)
+        VALUES (#{id}, #{userId}, #{objectId}, #{source}, #{price}, #{priceUnit}, #{giftId}, #{sendTime})
+    </insert>
+</mapper>

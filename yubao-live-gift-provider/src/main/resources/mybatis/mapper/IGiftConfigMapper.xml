@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.junbao.yubao.live.gift.provider.dao.mapper.IGiftConfigMapper">
+
+    <resultMap id="dataMap" type="cn.junbao.yubao.live.gift.provider.dao.po.GiftConfigPO">
+        <id property="giftId" column="gift_id" />
+        <result property="price" column="price" />
+        <result property="giftName" column="gift_name" />
+        <result property="status" column="status" />
+        <result property="coverImgUrl" column="cover_img_url" />
+        <result property="svgaUrl" column="svga_url" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+    </resultMap>
+
+    <select id="getGiftConfigById" resultMap="dataMap">
+        SELECT * FROM gift_config
+        WHERE gift_id = #{giftId}
+          AND status = #{status}
+        LIMIT 1
+    </select>
+    <select id="selectList" resultMap="dataMap">
+        SELECT * FROM gift_config
+        WHERE status = 1
+    </select>
+
+    <insert id="insertOne" parameterType="cn.junbao.yubao.live.gift.provider.dao.po.GiftConfigPO" >
+        INSERT INTO gift_config (gift_id, price, gift_name, status, cover_img_url, svga_url, create_time, update_time)
+        VALUES (#{giftId}, #{price}, #{giftName}, #{status}, #{coverImgUrl}, #{svgaUrl}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateOne" parameterType="cn.junbao.yubao.live.gift.provider.dao.po.GiftConfigPO">
+        UPDATE gift_config
+        SET price = #{price}, gift_name = #{giftName}, status = #{status}, cover_img_url = #{coverImgUrl}, svga_url = #{svgaUrl}, update_time = #{updateTime}
+        WHERE gift_id = #{giftId}
+    </update>
+
+</mapper>

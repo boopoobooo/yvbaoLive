@@ -6,6 +6,7 @@ import cn.junbao.yubao.im.router.provider.service.ImRouterService;
 import cn.junbao.yubao.live.im.dto.ImMsgBody;
 import com.alibaba.cloud.commons.lang.StringUtils;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.rpc.RpcContext;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -23,9 +24,10 @@ import java.util.stream.Collectors;
  * @Description:
  */
 @Service
+@Slf4j
 public class ImRouterServiceImpl implements ImRouterService {
 
-    @DubboReference
+    @DubboReference(check = false)
     private ImRouterHandlerRpc routerHandlerRpc;
     @Resource
     private RedisTemplate<String,Object> redisTemplate;
@@ -44,6 +46,7 @@ public class ImRouterServiceImpl implements ImRouterService {
 
     public void batchSendMsg(List<ImMsgBody> imMsgBodyList) {
         List<Long> userIdList = imMsgBodyList.stream().map(ImMsgBody::getUserId).toList();
+        log.info("[batchSendMsg] userIdList: {}", userIdList);
         //将不同的userId的 immsgbody分类存入map, 得到 userId->immsgbody的映射
         Map<Long, ImMsgBody> userIdMsgMap = imMsgBodyList.stream().collect(Collectors.toMap(ImMsgBody::getUserId, x -> x));
         //构建缓存key

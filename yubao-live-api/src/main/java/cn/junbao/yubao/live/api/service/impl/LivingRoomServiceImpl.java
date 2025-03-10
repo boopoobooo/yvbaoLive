@@ -11,6 +11,7 @@ import cn.junbao.yubao.live.living.interfaces.rpc.ILivingRoomRpc;
 import cn.junbao.yubao.live.user.dto.UserDTO;
 import cn.junbao.yubao.live.user.interfaces.IUserRpc;
 import com.alibaba.cloud.commons.lang.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
  * @Description:
  */
 @Service
+@Slf4j
 public class LivingRoomServiceImpl implements ILivingRoomService {
     @DubboReference(check = false)
     private ILivingRoomRpc livingRoomRpc;
@@ -65,6 +67,7 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
 
     @Override
     public LivingRoomInitVO anchorConfig(Long userId, Integer roomId) {
+        log.info("[anchorConfig] userId = {},roomId = {}",userId,roomId);
         // 调用RPC接口，根据roomId查询直播间信息
         LivingRoomRespDTO livingRoomRespDTO = livingRoomRpc.queryByRoomId(roomId);
 

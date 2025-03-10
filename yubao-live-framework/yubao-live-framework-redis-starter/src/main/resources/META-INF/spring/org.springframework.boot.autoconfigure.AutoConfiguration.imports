@@ -5,3 +5,5 @@ cn.junbao.yubao.live.framework.redis.starter.key.AccountProviderCacheKeyBuilder
 cn.junbao.yubao.live.framework.redis.starter.key.ImProviderCacheKeyBuilder
 cn.junbao.yubao.live.framework.redis.starter.key.ImCoreServerCacheKeyBuilder
 cn.junbao.yubao.live.framework.redis.starter.key.LivingProviderCacheKeyBuilder
+cn.junbao.yubao.live.framework.redis.starter.key.GiftProviderCacheKeyBuilder
+cn.junbao.yubao.live.framework.redis.starter.key.BankProviderCacheKeyBuilder
