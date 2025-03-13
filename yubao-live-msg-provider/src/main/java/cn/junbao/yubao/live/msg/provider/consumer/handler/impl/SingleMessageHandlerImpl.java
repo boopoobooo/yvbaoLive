@@ -49,8 +49,8 @@ public class SingleMessageHandlerImpl implements IMessageHandler {
             for (Long userId : userIdList) {
 
                 ImMsgBody respBody = new ImMsgBody();
-                respBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
                 respBody.setUserId(userId);//接收者为 body里面的 data里具体的user
+                respBody.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
                 respBody.setBizCode(ImMsgBizCodeEnum.LIVING_ROOM_IM_BIZ.getCode());
                 respBody.setData(JSON.toJSONString(messageDTO));
                 imMsgBodyList.add(respBody);

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,15 +16,17 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessageDTO {
-    //接收人id
+public class MessageDTO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -6819144884854677228L;
+
     private Long userId;
+    private Integer roomId;
     //发送人名称
     private String senderName;
-
-    private Long objectId;
-
-    private Integer roomId ;
+    //发送人头像
+    private String senderAvtar;
     /**
      * 消息类型
      */
@@ -31,7 +35,10 @@ public class MessageDTO {
      * 消息内容
      */
     private String content;
+
+
     private Date createTime;
     private Date updateTime;
+
 
 }

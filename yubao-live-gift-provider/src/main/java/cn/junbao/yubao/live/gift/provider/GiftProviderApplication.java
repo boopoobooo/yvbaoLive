@@ -40,8 +40,9 @@ public class GiftProviderApplication implements CommandLineRunner {
     private IGiftRecordService giftRecordService;
     @Override
     public void run(String... args) throws Exception {
-
-
-
+        List<GiftConfigDTO> giftConfigDTOS = giftConfigService.queryGiftList();
+        for (GiftConfigDTO giftConfigDTO : giftConfigDTOS) {
+            System.out.println(giftConfigDTO);
+        }
     }
 }

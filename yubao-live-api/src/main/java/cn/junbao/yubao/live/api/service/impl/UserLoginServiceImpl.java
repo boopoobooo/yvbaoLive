@@ -83,8 +83,8 @@ public class UserLoginServiceImpl implements IUserLoginService {
         //生成token
         String loginToken = userAccountRpc.createAndSaveToken(userLoginDTO.getUserId());
         this.saveTokenInCookie(loginToken,response);
-
-        return WebResponseVO.success(ConvertBeanUtils.convert(userLoginDTO, UserLoginVO.class));
+        UserLoginVO userLoginVO = ConvertBeanUtils.convert(userLoginDTO, UserLoginVO.class);
+        return WebResponseVO.success(userLoginVO);
     }
 
     /**

@@ -13,6 +13,6 @@ public class GiftProviderTopicNames {
     /**
      * 发送礼物消息
      */
-    public static final String SEND_GIFT = "send_gift";
+    public static final String SEND_GIFT = "yubao_send_gift_topic";
 
 }

@@ -1,0 +1,18 @@
+package cn.junbao.yubao.live.bank.interfaces;
+
+import cn.junbao.yubao.live.bank.dto.PayProductDTO;
+
+import java.util.List;
+
+/**
+ * @Author: Junbao
+ * @Date: 2025/3/10 20:17
+ * @Description:
+ */
+public interface IPayProductRpc {
+
+    /**
+     * 根据产品类型，返回批量的商品信息
+     */
+    List<PayProductDTO> products(Integer type);
+}

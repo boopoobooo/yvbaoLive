@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum TradeTypeEnum {
-    SEND_GIFT_TRADE(5556,"送礼物交易类型");
+    SEND_GIFT_TRADE(0,"送礼物交易"),
+    LIVING_RECHARGE(1,"直播间充值");
     private Integer code ;
     private String msg;
 }

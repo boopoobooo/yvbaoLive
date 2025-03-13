@@ -22,7 +22,7 @@
         set current_balance = current_balance + #{num}
         where user_id = #{userId}
     </update>
-    <select id="queryBalance" parameterType="long" resultMap="dataMap">
+    <select id="queryBalance" parameterType="long" resultType="java.lang.Integer">
         select current_balance
         from currency_account
         where user_id = #{userId} and status = 1

@@ -72,6 +72,7 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
         LivingRoomRespDTO livingRoomRespDTO = livingRoomRpc.queryByRoomId(roomId);
 
         if (livingRoomRespDTO == null){
+            log.warn("[anchorConfig] livingRoomRespDTO is null, userId = {},roomId = {}",userId,roomId);
             return null;
         }
         // 查询主播和当前用户的用户信息

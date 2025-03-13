@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.junbao.yubao.live.bank.provider.dao.mapper.IPayProductMapper">
+
+    <resultMap id="dataMap" type="cn.junbao.yubao.live.bank.provider.dao.po.PayProductPO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="INTEGER"/>
+        <result column="extra" property="extra" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="valid_status" property="validStatus" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, name, price, extra, type, valid_status, create_time, update_time
+    </sql>
+    <!-- Base Select SQL -->
+    <select id="selectById" resultMap="dataMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM pay_product
+        WHERE id = #{id}
+    </select>
+    <select id="selectListByType" resultType="cn.junbao.yubao.live.bank.provider.dao.po.PayProductPO">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM pay_product
+        WHERE type = #{type} AND valid_status = #{validStatus}
+        ORDER BY price DESC
+    </select>
+
+    <insert id="insertOne" parameterType="cn.junbao.yubao.live.bank.provider.dao.po.PayProductPO">
+        INSERT INTO pay_product
+            (id, name, price, extra, type, valid_status, create_time, update_time)
+        VALUES
+            (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=INTEGER},
+             #{extra,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{validStatus,jdbcType=INTEGER},
+             #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+
+    <update id="update" parameterType="cn.junbao.yubao.live.bank.provider.dao.po.PayProductPO">
+        UPDATE pay_product
+        SET name = #{name,jdbcType=VARCHAR},
+            price = #{price,jdbcType=INTEGER},
+            extra = #{extra,jdbcType=VARCHAR},
+            type = #{type,jdbcType=INTEGER},
+            valid_status = #{validStatus,jdbcType=INTEGER},
+            create_time = #{createTime,jdbcType=TIMESTAMP},
+            update_time = #{updateTime,jdbcType=TIMESTAMP}
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM pay_product
+        WHERE id = #{id,jdbcType=BIGINT}
+    </delete>
+
+
+</mapper>

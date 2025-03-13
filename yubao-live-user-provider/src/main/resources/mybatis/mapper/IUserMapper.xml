@@ -4,7 +4,7 @@
 
     <resultMap id="dataMap" type="cn.junbao.yubao.live.user.provider.dao.po.UserPO">
         <id column="id" property="id" />
-        <id column="user_id" property="userId"/>
+        <result column="user_id" property="userId"/>
         <result column="nick_name" property="nickName"/>
         <result column="true_name" property="trueName"/>
         <result column="avatar" property="avatar"/>

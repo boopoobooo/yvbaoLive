@@ -18,7 +18,6 @@ public class UserInfoInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String userIdStr = request.getHeader(GatewayHeaderEnum.USER_LOGIN_ID.getName());
-        log.info("[preHandle] userIdStr = {}",userIdStr);
         if (StringUtils.isBlank(userIdStr)){
             //白名单路径,放行
             return true;

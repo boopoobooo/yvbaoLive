@@ -73,6 +73,7 @@ public class CurrencyAccountServiceImpl implements ICurrencyAccountService {
             return (Integer) cacheBalance;
         }
         Integer currentBalance = currencyAccountMapper.queryBalance(userId);
+        log.info("[getBalance] userId = {},当前余额: {}",userId,currentBalance);
         if (currentBalance == null) {
             redisTemplate.opsForValue().set(cacheKey, -1, 1, TimeUnit.MINUTES);
             return null;
