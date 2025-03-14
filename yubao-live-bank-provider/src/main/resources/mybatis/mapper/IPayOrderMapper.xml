@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.junbao.yubao.live.bank.provider.dao.mapper.IPayOrderMapper">
+
+    <resultMap id="dataMap" type="cn.junbao.yubao.live.bank.provider.dao.po.PayOrderPO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="order_id" property="orderId" jdbcType="VARCHAR"/>
+        <result column="product_id" property="productId" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="source" property="source" jdbcType="INTEGER"/>
+        <result column="pay_channel" property="payChannel" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="pay_time" property="payTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+
+    <select id="selectOne" resultMap="dataMap" parameterType="cn.junbao.yubao.live.bank.provider.dao.po.PayOrderPO">
+        SELECT * FROM
+            pay_order
+        WHERE
+            order_id = #{orderId} AND valid_status = 1
+            LIMIT 1
+    </select>
+
+    <select id="selectListByType" resultMap="dataMap" parameterType="java.util.Map">
+        SELECT
+            * FROM pay_order
+        WHERE
+            type = #{type} AND valid_status = #{validStatus}
+        ORDER BY price DESC
+    </select>
+
+    <select id="selectByProductId" resultMap="dataMap" parameterType="java.lang.Long">
+        SELECT
+            id,
+            order_id,
+            product_id,
+            user_id,
+            source,
+            pay_channel,
+            status,
+            pay_time,
+            create_time,
+            update_time
+        FROM
+            pay_order
+        WHERE
+            id = #{id} AND valid_status = 1
+    </select>
+
+    <!-- 插入语句 -->
+    <insert id="insertOne" parameterType="cn.junbao.yubao.live.bank.provider.dao.po.PayOrderPO">
+        INSERT INTO pay_order
+        (order_id, product_id, user_id, source, pay_channel, status, pay_time, create_time, update_time)
+        VALUES
+            ( #{orderId,jdbcType=VARCHAR}, #{productId,jdbcType=INTEGER}, #{userId,jdbcType=BIGINT},
+             #{source,jdbcType=INTEGER}, #{payChannel,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{payTime,jdbcType=TIMESTAMP},
+             now(),now())
+    </insert>
+
+    <!-- 更新语句 -->
+    <update id="updateById" parameterType="cn.junbao.yubao.live.bank.provider.dao.po.PayOrderPO">
+        UPDATE pay_order
+        SET
+            order_id = #{orderId,jdbcType=VARCHAR},
+            product_id = #{productId,jdbcType=INTEGER},
+            user_id = #{userId,jdbcType=BIGINT},
+            source = #{source,jdbcType=INTEGER},
+            pay_channel = #{payChannel,jdbcType=INTEGER},
+            status = #{status},
+            pay_time = #{payTime,jdbcType=TIMESTAMP},
+            update_time = now()
+        WHERE
+            id = #{id}
+    </update>
+    <update id="updateByOrderId" parameterType="cn.junbao.yubao.live.bank.provider.dao.po.PayOrderPO">>
+    UPDATE pay_order
+    SET
+        order_id = #{orderId,jdbcType=VARCHAR},
+        product_id = #{productId,jdbcType=INTEGER},
+        user_id = #{userId,jdbcType=BIGINT},
+        source = #{source,jdbcType=INTEGER},
+        pay_channel = #{payChannel,jdbcType=INTEGER},
+        status = #{status,jdbcType=INTEGER},
+        pay_time = #{payTime,jdbcType=TIMESTAMP},
+        update_time = now()
+    WHERE
+        order_id = #{orderId}
+    </update>
+
+    <!-- 删除语句 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM pay_order
+        WHERE
+            id = #{id,jdbcType=BIGINT}
+    </delete>
+
+
+
+</mapper>

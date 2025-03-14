@@ -21,14 +21,21 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM pay_product
-        WHERE id = #{id}
+        WHERE id = #{id} and valid_status = #{validStatus}
     </select>
-    <select id="selectListByType" resultType="cn.junbao.yubao.live.bank.provider.dao.po.PayProductPO">
+    <select id="selectListByType" resultMap="dataMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM pay_product
         WHERE type = #{type} AND valid_status = #{validStatus}
         ORDER BY price DESC
+    </select>
+    <select id="selectByProductId" resultMap="dataMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM pay_product
+        WHERE id = #{id} AND valid_status = 1
+
     </select>
 
     <insert id="insertOne" parameterType="cn.junbao.yubao.live.bank.provider.dao.po.PayProductPO">

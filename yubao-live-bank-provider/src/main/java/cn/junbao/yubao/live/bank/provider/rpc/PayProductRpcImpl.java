@@ -24,4 +24,9 @@ public class PayProductRpcImpl implements IPayProductRpc {
     public List<PayProductDTO> products(Integer type) {
         return payProductService.products(type);
     }
+
+    @Override
+    public PayProductDTO getByProductId(Integer productId) {
+        return payProductService.getByProductId(productId);
+    }
 }

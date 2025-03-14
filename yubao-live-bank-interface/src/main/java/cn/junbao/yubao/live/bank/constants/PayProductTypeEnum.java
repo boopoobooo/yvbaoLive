@@ -1,4 +1,4 @@
-package cn.junbao.yubao.live.bank.enums;
+package cn.junbao.yubao.live.bank.constants;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum PayProductTypeEnum {
-    QIYU_COIN(0, "直播间充值-旗鱼虚拟币产品");
+    YUBAO_COIN(0, "直播间充值-鱼宝虚拟币产品");
 
     int code;
     String desc;

@@ -81,7 +81,7 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
         //校验成功，将userid传入下游并放行
         ServerHttpRequest.Builder builder = request.mutate();
         builder.header(GatewayHeaderEnum.USER_LOGIN_ID.getName(), String.valueOf(userId));
-        log.info("[AccountCheckFilter]请求头信息：{}",builder.build().getHeaders().get(GatewayHeaderEnum.USER_LOGIN_ID.getName()));
+        log.debug("[AccountCheckFilter]请求头信息：{}",builder.build().getHeaders().get(GatewayHeaderEnum.USER_LOGIN_ID.getName()));
         return chain.filter(exchange.mutate().request(builder.build()).build());
     }
 

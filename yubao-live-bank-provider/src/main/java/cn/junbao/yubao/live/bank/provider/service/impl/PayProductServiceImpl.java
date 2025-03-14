@@ -54,4 +54,26 @@ public class PayProductServiceImpl implements IPayProductService {
         redisTemplate.expire(cacheKey, 30L, TimeUnit.MINUTES);
         return payProductDTOS;
     }
+
+    @Override
+    public PayProductDTO getByProductId(Integer productId) {
+        String cacheKey = cacheKeyBuilder.buildPayProductItemCache(productId);
+        PayProductDTO payProductDTO = (PayProductDTO) redisTemplate.opsForValue().get(cacheKey);
+        if (payProductDTO != null) {
+            if (payProductDTO.getId() == null) {
+                return null;
+            }
+            return payProductDTO;
+        }
+
+        PayProductPO payProductPO = payProductMapper.selectByProductId(productId);
+        payProductDTO = ConvertBeanUtils.convert(payProductPO, PayProductDTO.class);
+
+        if (payProductDTO == null) {
+            redisTemplate.opsForValue().set(cacheKey, new PayProductDTO(), 1L, TimeUnit.MINUTES);
+            return null;
+        }
+        redisTemplate.opsForValue().set(cacheKey, payProductDTO, 30L, TimeUnit.MINUTES);
+        return payProductDTO;
+    }
 }

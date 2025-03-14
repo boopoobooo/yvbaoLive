@@ -11,6 +11,8 @@ public interface IPayProductMapper {
 
     PayProductPO selectById(Long id );
 
+    PayProductPO selectByProductId(Integer productId);
+
     int insertOne(PayProductPO payProductPO);
 
     List<PayProductPO> selectListByType(@Param("type") Integer type, @Param("validStatus") Integer validStatus);

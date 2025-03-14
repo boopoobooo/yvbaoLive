@@ -19,7 +19,7 @@ import java.util.Date;
 public class PayProductPO implements Serializable {
     @Serial
     private static final long serialVersionUID = 7397701943457229766L;
-    private Long id;
+    private Integer id;
     private String name;
     private Integer price;
     private String extra;
