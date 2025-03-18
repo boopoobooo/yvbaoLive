@@ -10,7 +10,9 @@ import lombok.Data;
 @Data
 public class SendGiftMqMessageDTO {
     private Long userId;
+    private String senderNickName;//发送礼物者的昵称
     private Integer giftId;
+    private String giftName;//礼物名称
     private Integer price;
     private Long receiverId;
     private Integer roomId;

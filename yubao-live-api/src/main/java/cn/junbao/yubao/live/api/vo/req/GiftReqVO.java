@@ -16,6 +16,7 @@ public class GiftReqVO {
     private int giftId;
     private Integer roomId;
     private Long senderUserId;
+    private String senderNickName;
     private Long receiverId;
     private int type;
 

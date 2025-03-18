@@ -49,20 +49,23 @@ public class GiftServiceImpl implements IGiftService {
             log.warn("[GiftServiceImpl]礼物不存在,giftId:{}",giftId);
             return false;
         }
-        if (giftReqVO.getReceiverId() == giftReqVO.getSenderUserId()){
+        /*if (giftReqVO.getReceiverId() == giftReqVO.getSenderUserId()){
             log.warn("[GiftServiceImpl]不能送礼给自己,giftId:{},senderUserId = {}",giftId,giftReqVO.getSenderUserId());
             return false;
-        }
+        }*/
 
         // 进行异步消费
         SendGiftMqMessageDTO sendGiftMqMessageDTO = new SendGiftMqMessageDTO();
-        sendGiftMqMessageDTO.setUserId(WebRequestContext.getUserId());
+        sendGiftMqMessageDTO.setUserId(WebRequestContext.getUserId());//发送者userid
+        sendGiftMqMessageDTO.setSenderNickName(giftReqVO.getSenderNickName());
         sendGiftMqMessageDTO.setGiftId(giftId);
+        sendGiftMqMessageDTO.setGiftName(giftConfigDTO.getGiftName());
         sendGiftMqMessageDTO.setRoomId(giftReqVO.getRoomId());
         sendGiftMqMessageDTO.setReceiverId(giftReqVO.getReceiverId());
         sendGiftMqMessageDTO.setPrice(giftConfigDTO.getPrice());
         sendGiftMqMessageDTO.setUrl(giftConfigDTO.getSvgaUrl());
         sendGiftMqMessageDTO.setType(giftReqVO.getType());
+
         sendGiftMqMessageDTO.setUuid(UUID.randomUUID().toString());// 设置唯一标识UUID，防止mq重复消费
 
         //发送mq

@@ -3,8 +3,10 @@ package cn.junbao.yubao.live.api.service.impl;
 import cn.junbao.yubao.live.api.service.ILivingRoomService;
 import cn.junbao.yubao.live.api.vo.LivingRoomInitVO;
 import cn.junbao.yubao.live.api.vo.LivingRoomPageRespVO;
+import cn.junbao.yubao.live.api.vo.req.OnlinePKReqVO;
 import cn.junbao.yubao.live.framework.web.strater.context.WebRequestContext;
 import cn.junbao.yubao.live.im.constants.AppIdEnum;
+import cn.junbao.yubao.live.living.interfaces.dto.LivingPkRespDTO;
 import cn.junbao.yubao.live.living.interfaces.dto.LivingRoomReqDTO;
 import cn.junbao.yubao.live.living.interfaces.dto.LivingRoomRespDTO;
 import cn.junbao.yubao.live.living.interfaces.rpc.ILivingRoomRpc;
@@ -42,6 +44,7 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
     @Override
     public Integer startLiving(Integer type) {
         LivingRoomReqDTO livingRoomReqDTO = new LivingRoomReqDTO();
+
         livingRoomReqDTO.setAnchorId(WebRequestContext.getUserId());
         livingRoomReqDTO.setRoomName("主播:"+WebRequestContext.getUserId()+"的房间");
         livingRoomReqDTO.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
@@ -108,5 +111,20 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
         respVO.setDefaultBgImg("https://picst.sunbangyan.cn/2023/08/29/waxzj0.png");
         return respVO;
 
+    }
+
+    //LivingRoomServiceImpl
+    @Override
+    public boolean onlinePK(OnlinePKReqVO onlinePKReqVO) {
+        LivingRoomReqDTO reqDTO = new LivingRoomReqDTO();
+        reqDTO.setRoomId(onlinePKReqVO.getRoomId());
+        reqDTO.setAppId(AppIdEnum.YUBAO_LIVE_BIZ.getAppId());
+        reqDTO.setPkObjId(WebRequestContext.getUserId());
+        LivingPkRespDTO livingPkRespDTO = livingRoomRpc.onlinePK(reqDTO);
+        if (!livingPkRespDTO.isOnlineStatus()){
+            log.warn("[onlinePK] 开播失败...LivingPkRespDTO错误消息 = {}",livingPkRespDTO.getMsg());
+            return false;
+        }
+        return true;
     }
 }

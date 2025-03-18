@@ -29,10 +29,10 @@
         #{roomName,jdbcType=VARCHAR},
         #{covertImg,jdbcType=VARCHAR},
         #{status,jdbcType=INTEGER},
-        #{watchNum,jdbcType=INTEGER},
-        #{goodNum,jdbcType=INTEGER},
-        #{startTime,jdbcType=TIMESTAMP},
-        #{updateTime,jdbcType=TIMESTAMP}
+        0,
+        0,
+        now(),
+        now()
         )
     </insert>
     <delete id="deleteByRoomId" parameterType="java.lang.Integer">

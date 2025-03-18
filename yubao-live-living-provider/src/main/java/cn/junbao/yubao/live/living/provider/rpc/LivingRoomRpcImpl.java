@@ -1,5 +1,6 @@
 package cn.junbao.yubao.live.living.provider.rpc;
 
+import cn.junbao.yubao.live.living.interfaces.dto.LivingPkRespDTO;
 import cn.junbao.yubao.live.living.interfaces.dto.LivingRoomReqDTO;
 import cn.junbao.yubao.live.living.interfaces.dto.LivingRoomRespDTO;
 import cn.junbao.yubao.live.living.interfaces.rpc.ILivingRoomRpc;
@@ -42,5 +43,20 @@ public class LivingRoomRpcImpl implements ILivingRoomRpc {
 
     public List<Long> queryUserIdByRoomId(LivingRoomReqDTO livingRoomReqDTO){
         return livingRoomService.queryUserIdByRoomId(livingRoomReqDTO);
+    }
+
+    @Override
+    public LivingPkRespDTO onlinePK(LivingRoomReqDTO livingRoomReqDTO) {
+        return livingRoomService.onlinePk(livingRoomReqDTO);
+    }
+
+    @Override
+    public boolean offlinePk(LivingRoomReqDTO livingRoomReqDTO) {
+        return livingRoomService.offlinePk(livingRoomReqDTO);
+    }
+
+    @Override
+    public Long queryOnlinePkUserId(Integer roomId) {
+        return livingRoomService.queryOnlinePkUserId(roomId);
     }
 }

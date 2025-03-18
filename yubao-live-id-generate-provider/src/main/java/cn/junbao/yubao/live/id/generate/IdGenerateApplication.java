@@ -33,9 +33,15 @@ public class IdGenerateApplication implements CommandLineRunner{
         ).start();
     }
 
+     @Resource
+    private IdGenerateService idGenerateService;
     @Override
     public void run(String... args) throws Exception {
         System.out.println("======================");
+        for (int i = 0; i < 20; i++) {
+            Long id = idGenerateService.getSeqId(3);
+            System.out.println(id);
+        }
     }
 
     /*@Resource

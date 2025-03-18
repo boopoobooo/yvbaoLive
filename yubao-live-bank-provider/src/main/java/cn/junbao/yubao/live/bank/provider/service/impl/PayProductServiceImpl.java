@@ -8,6 +8,7 @@ import cn.junbao.yubao.live.common.interfaces.enums.CommonStatusEum;
 import cn.junbao.yubao.live.common.interfaces.utils.ConvertBeanUtils;
 import cn.junbao.yubao.live.framework.redis.starter.key.BankProviderCacheKeyBuilder;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
  * @Description:
  */
 @Service
+@Slf4j
 public class PayProductServiceImpl implements IPayProductService {
     @Resource
     private IPayProductMapper payProductMapper;
@@ -37,8 +39,10 @@ public class PayProductServiceImpl implements IPayProductService {
         List<PayProductDTO> cacheList = redisTemplate.opsForList().range(cacheKey, 0, 30).stream().map(x -> (PayProductDTO) x).collect(Collectors.toList());
         if (!CollectionUtils.isEmpty(cacheList)) {
             if (cacheList.get(0).getId() == null) {
+                log.warn("[products]返回空集合");
                 return Collections.emptyList();
             }
+            log.info("[products] 返回cacheList.size = {}",cacheList.size());
             return cacheList;
         }
         List<PayProductPO> payProductPOS = payProductMapper.selectListByType(type,CommonStatusEum.VALID_STATUS.getCode());

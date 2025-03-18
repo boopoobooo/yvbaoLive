@@ -2,6 +2,7 @@ package cn.junbao.yubao.live.living.interfaces.rpc;
 
 
 
+import cn.junbao.yubao.live.living.interfaces.dto.LivingPkRespDTO;
 import cn.junbao.yubao.live.living.interfaces.dto.LivingRoomReqDTO;
 import cn.junbao.yubao.live.living.interfaces.dto.LivingRoomRespDTO;
 
@@ -39,6 +40,23 @@ public interface ILivingRoomRpc {
 
     List<LivingRoomRespDTO> list(Integer type,int pageNum, int pageSize );
 
-    public List<Long> queryUserIdByRoomId(LivingRoomReqDTO livingRoomReqDTO);
+    List<Long> queryUserIdByRoomId(LivingRoomReqDTO livingRoomReqDTO);
 
+    /**
+     * 当PK直播间连上线准备PK时，调用该请求
+     */
+    LivingPkRespDTO onlinePK(LivingRoomReqDTO livingRoomReqDTO);
+
+    /**
+     * 用户在pk直播间下线
+     *
+     * @param livingRoomReqDTO
+     * @return
+     */
+    boolean offlinePk(LivingRoomReqDTO livingRoomReqDTO);
+
+    /**
+     * 根据roomId查询当前pk人是谁
+     */
+    Long queryOnlinePkUserId(Integer roomId);
 }

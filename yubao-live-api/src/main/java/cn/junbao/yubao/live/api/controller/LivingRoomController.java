@@ -2,6 +2,7 @@ package cn.junbao.yubao.live.api.controller;
 
 import cn.junbao.yubao.live.api.service.ILivingRoomService;
 import cn.junbao.yubao.live.api.vo.LivingRoomInitVO;
+import cn.junbao.yubao.live.api.vo.req.OnlinePKReqVO;
 import cn.junbao.yubao.live.common.interfaces.vo.WebResponseVO;
 import cn.junbao.yubao.live.framework.web.strater.context.WebRequestContext;
 import jakarta.annotation.Resource;
@@ -60,5 +61,15 @@ public class LivingRoomController {
     public WebResponseVO anchorConfig(Integer roomId) {
         log.info("[anchorConfig] roomId = {}",roomId);
         return WebResponseVO.success(livingRoomService.anchorConfig(WebRequestContext.getUserId(), roomId));
+    }
+
+    //LivingRoomController
+    @PostMapping("/onlinePK")
+    public WebResponseVO onlinePk(OnlinePKReqVO onlinePKReqVO) {
+        if (onlinePKReqVO == null ){
+            log.warn("[onlinePk] onlinePKReqVO is null");
+            return WebResponseVO.errorParam();
+        }
+        return WebResponseVO.success(livingRoomService.onlinePK(onlinePKReqVO));
     }
 }
