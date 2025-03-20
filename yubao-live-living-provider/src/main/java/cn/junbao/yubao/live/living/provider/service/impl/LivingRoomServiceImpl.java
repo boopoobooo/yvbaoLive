@@ -271,4 +271,13 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
         String cacheKey = cacheKeyBuilder.buildLivingOnlinePk(roomId);
         return (Long) redisTemplate.opsForValue().get(cacheKey);
     }
+
+    @Override
+    public LivingRoomRespDTO queryByAnchorId(Long anchorId) {
+        LivingRoomPO livingRoomReqPO = new LivingRoomPO();
+        livingRoomReqPO.setAnchorId(anchorId);
+        livingRoomReqPO.setStatus(CommonStatusEum.VALID_STATUS.getCode());
+        return ConvertBeanUtils.convert(livingRoomMapper.selectOne(livingRoomReqPO), LivingRoomRespDTO.class);
+
+    }
 }

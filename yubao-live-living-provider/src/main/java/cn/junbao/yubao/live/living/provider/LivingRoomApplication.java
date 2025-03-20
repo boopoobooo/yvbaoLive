@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @Author: Junbao
- * @Date: 2025/3/3 14:34
  * @Description:
  */
 @SpringBootApplication

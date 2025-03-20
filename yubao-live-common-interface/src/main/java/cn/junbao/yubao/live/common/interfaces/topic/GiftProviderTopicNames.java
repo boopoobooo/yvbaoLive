@@ -15,4 +15,9 @@ public class GiftProviderTopicNames {
      */
     public static final String SEND_GIFT = "yubao_send_gift_topic";
 
+    /**
+     * 用户红包雨抢红包消息topic
+     */
+    public static final String RECEIVE_RED_PACKET = "yubao_receive-red-packet";
+
 }

@@ -1,4 +1,4 @@
-package cn.junbao.yubao.live.api.vo;
+package cn.junbao.yubao.live.api.vo.resp;
 
 import cn.junbao.yubao.live.living.interfaces.dto.LivingRoomRespDTO;
 import lombok.Data;

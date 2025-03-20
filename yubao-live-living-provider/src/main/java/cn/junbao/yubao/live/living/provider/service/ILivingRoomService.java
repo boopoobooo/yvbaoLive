@@ -76,4 +76,6 @@ public interface ILivingRoomService {
      * @return
      */
     Long queryOnlinePkUserId(Integer roomId);
+
+    LivingRoomRespDTO queryByAnchorId(Long anchorId);
 }

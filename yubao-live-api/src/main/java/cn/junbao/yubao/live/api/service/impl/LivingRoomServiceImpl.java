@@ -2,9 +2,15 @@ package cn.junbao.yubao.live.api.service.impl;
 
 import cn.junbao.yubao.live.api.service.ILivingRoomService;
 import cn.junbao.yubao.live.api.vo.LivingRoomInitVO;
-import cn.junbao.yubao.live.api.vo.LivingRoomPageRespVO;
+import cn.junbao.yubao.live.api.vo.req.LivingRoomReqVO;
 import cn.junbao.yubao.live.api.vo.req.OnlinePKReqVO;
+import cn.junbao.yubao.live.api.vo.resp.RedPacketReceiveRespVO;
 import cn.junbao.yubao.live.framework.web.strater.context.WebRequestContext;
+import cn.junbao.yubao.live.gift.dto.RedPacketConfigReqDTO;
+import cn.junbao.yubao.live.gift.dto.RedPacketConfigRespDTO;
+import cn.junbao.yubao.live.gift.dto.RedPacketReceiveDTO;
+import cn.junbao.yubao.live.gift.interfaces.IGiftConfigRpc;
+import cn.junbao.yubao.live.gift.interfaces.IRedPacketConfigRpc;
 import cn.junbao.yubao.live.im.constants.AppIdEnum;
 import cn.junbao.yubao.live.living.interfaces.dto.LivingPkRespDTO;
 import cn.junbao.yubao.live.living.interfaces.dto.LivingRoomReqDTO;
@@ -15,7 +21,6 @@ import cn.junbao.yubao.live.user.interfaces.IUserRpc;
 import com.alibaba.cloud.commons.lang.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -36,6 +41,9 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
 
     @DubboReference(check = false)
     private IUserRpc userRpc;
+    @DubboReference(check = false)
+    private IRedPacketConfigRpc redPacketConfigRpc;
+
 
 
     /**
@@ -63,7 +71,10 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
     }
 
     @Override
-    public List<LivingRoomRespDTO> list(Integer type,int pageNum, int pageSize) {
+    public List<LivingRoomRespDTO> list(LivingRoomReqVO livingRoomReqVO) {
+        Integer type = livingRoomReqVO.getType();
+        int pageNum = livingRoomReqVO.getPageNum();
+        int pageSize = livingRoomReqVO.getPageSize();
         List<LivingRoomRespDTO> livingRoomRespDTOList = livingRoomRpc.list(type,pageNum,pageSize);
         return livingRoomRespDTOList;
     }
@@ -91,7 +102,7 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
         respVO.setAnchorNickName(anchor.getNickName());
         respVO.setWatcherNickName(watcher.getNickName());
         respVO.setUserId(userId);
-        respVO.setAvatar(StringUtils.isEmpty(anchor.getAvatar()) ? "https://s1.ax1x.com/2022/12/18/zb6q6f.png" : anchor.getAvatar());
+        respVO.setAvatar(StringUtils.isEmpty(anchor.getAvatar()) ? "/img/4.jpeg" : anchor.getAvatar());
 
         // 设置当前用户的头像
         respVO.setWatcherAvatar(watcher.getAvatar());
@@ -99,7 +110,22 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
         // 检查直播间是否存在，如果不存在则设置roomId为-1
         if (livingRoomRespDTO == null || livingRoomRespDTO.getAnchorId() == null || userId == null) {
             respVO.setRoomId(-1);
-        } else {
+            return respVO;
+        }
+
+        boolean isAuthor = livingRoomRespDTO.getAnchorId().equals(userId);
+        respVO.setRoomId(livingRoomRespDTO.getRoomId());
+        respVO.setAnchorId(livingRoomRespDTO.getAnchorId());
+        respVO.setAnchor(isAuthor);
+        //配置红包雨code
+        if (isAuthor) {
+            RedPacketConfigRespDTO redPacketConfigRespDTO = redPacketConfigRpc.queryByAnchorId(userId);
+            if (redPacketConfigRespDTO != null) {
+                respVO.setRedPacketConfigCode(redPacketConfigRespDTO.getConfigCode());
+            }
+        }
+
+        else {
             // 如果直播间存在，设置直播间ID和主播ID
             respVO.setRoomId(livingRoomRespDTO.getId());
             respVO.setAnchorId(livingRoomRespDTO.getAnchorId());
@@ -107,8 +133,7 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
             respVO.setAnchor(livingRoomRespDTO.getAnchorId().equals(userId));
         }
 
-        // 设置默认背景图片
-        respVO.setDefaultBgImg("https://picst.sunbangyan.cn/2023/08/29/waxzj0.png");
+        respVO.setDefaultBgImg("/img/4.jpeg");
         return respVO;
 
     }
@@ -126,5 +151,46 @@ public class LivingRoomServiceImpl implements ILivingRoomService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Boolean prepareRedPacket(Long userId, Integer roomId) {
+        LivingRoomRespDTO livingRoomRespDTO = livingRoomRpc.queryByRoomId(roomId);
+        if (livingRoomRespDTO == null){
+            log.warn("[prepareRedPacket] 直播间不存在...roomId = {}",roomId);
+            return false;
+        }
+        if (livingRoomRespDTO.getAnchorId().equals(userId)){
+            log.warn("[prepareRedPacket] 只能直播间主播才能初始化红包雨...roomId = {}",roomId);
+        }
+        return redPacketConfigRpc.prepareRedPacket(userId);
+    }
+
+    @Override
+    public Boolean startRedPacket(Long userId, String code) {
+        log.info("[startRedPacket] 开始红包雨...userId = {}, code = {}",userId,code);
+        RedPacketConfigReqDTO reqDTO = new RedPacketConfigReqDTO();
+        reqDTO.setUserId(userId);
+        reqDTO.setRedPacketConfigCode(code);
+        LivingRoomRespDTO livingRoomRespDTO = livingRoomRpc.queryByAnchorId(userId);
+        reqDTO.setRoomId(livingRoomRespDTO.getRoomId());
+        return redPacketConfigRpc.startRedPacket(reqDTO);
+    }
+
+    @Override
+    public RedPacketReceiveRespVO getRedPacket(Long userId, String redPacketConfigCode) {
+        log.info("[getRedPacket] 领取红包...userId = {}, redPacketConfigCode = {}",userId,redPacketConfigCode);
+        RedPacketConfigReqDTO reqDTO = new RedPacketConfigReqDTO();
+        reqDTO.setUserId(userId);
+        reqDTO.setRedPacketConfigCode(redPacketConfigCode);
+        RedPacketReceiveDTO redPacketReceiveDTO = redPacketConfigRpc.receiveRedPacket(reqDTO);
+        RedPacketReceiveRespVO redPacketReceiveRespVO = new RedPacketReceiveRespVO();
+        if (redPacketReceiveDTO == null) {
+            redPacketReceiveRespVO.setMsg("红包已派发完毕");
+        } else {
+            redPacketReceiveRespVO.setPrice(redPacketReceiveDTO.getPrice());
+            redPacketReceiveRespVO.setMsg(redPacketReceiveDTO.getNotifyMsg());
+        }
+        return redPacketReceiveRespVO;
     }
 }

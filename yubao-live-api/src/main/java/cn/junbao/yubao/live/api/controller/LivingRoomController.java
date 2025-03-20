@@ -2,8 +2,10 @@ package cn.junbao.yubao.live.api.controller;
 
 import cn.junbao.yubao.live.api.service.ILivingRoomService;
 import cn.junbao.yubao.live.api.vo.LivingRoomInitVO;
+import cn.junbao.yubao.live.api.vo.req.LivingRoomReqVO;
 import cn.junbao.yubao.live.api.vo.req.OnlinePKReqVO;
 import cn.junbao.yubao.live.common.interfaces.vo.WebResponseVO;
+import cn.junbao.yubao.live.framework.web.strater.annotation.RequestLimit;
 import cn.junbao.yubao.live.framework.web.strater.context.WebRequestContext;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +27,12 @@ public class LivingRoomController {
     private ILivingRoomService livingRoomService;
 
     @PostMapping("/list")
-    public WebResponseVO list(Integer type,int pageNum, int pageSize){
-        if (type == null ){
+    public WebResponseVO list(LivingRoomReqVO livingRoomReqVO){
+        if (livingRoomReqVO.getType() == null ){
             log.warn("[list]参数异常，type is null");
             return WebResponseVO.errorParam("type is null");
         }
-        return WebResponseVO.success(livingRoomService.list(type,pageNum,pageSize));
+        return WebResponseVO.success(livingRoomService.list(livingRoomReqVO));
     }
 
 
@@ -53,7 +55,7 @@ public class LivingRoomController {
     }
 
     /**
-     * 获取主播相关配置信息（只有主播才会有权限）
+     * 获取主播相关配置信息
      *
      * @return
      */
@@ -63,7 +65,6 @@ public class LivingRoomController {
         return WebResponseVO.success(livingRoomService.anchorConfig(WebRequestContext.getUserId(), roomId));
     }
 
-    //LivingRoomController
     @PostMapping("/onlinePK")
     public WebResponseVO onlinePk(OnlinePKReqVO onlinePKReqVO) {
         if (onlinePKReqVO == null ){
@@ -71,5 +72,23 @@ public class LivingRoomController {
             return WebResponseVO.errorParam();
         }
         return WebResponseVO.success(livingRoomService.onlinePK(onlinePKReqVO));
+    }
+
+    @RequestLimit(limit = 1, second = 10, msg = "正在初始化红包数据，请稍等")
+    @PostMapping("/prepareRedPacket")
+    public WebResponseVO prepareRedPacket(Integer roomId) {
+        return WebResponseVO.success(livingRoomService.prepareRedPacket(WebRequestContext.getUserId(), roomId));
+    }
+
+    @RequestLimit(limit = 1, second = 10, msg = "正在广播给直播间用户，请稍等")
+    @PostMapping("/startRedPacket")
+    public WebResponseVO startRedPacket(String redPacketConfigCode) {
+        return WebResponseVO.success(livingRoomService.startRedPacket(WebRequestContext.getUserId(), redPacketConfigCode));
+    }
+
+    @RequestLimit(limit = 1, second = 7, msg = "")
+    @PostMapping("/getRedPacket")
+    public WebResponseVO getRedPacket(String redPacketConfigCode) {
+        return WebResponseVO.success(livingRoomService.getRedPacket(WebRequestContext.getUserId(), redPacketConfigCode));
     }
 }

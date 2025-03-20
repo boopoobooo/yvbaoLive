@@ -4,6 +4,7 @@
 
     <resultMap id="dataMap" type="cn.junbao.yubao.live.living.provider.dao.po.LivingRoomPO">
         <id column="id" property="id" />
+        <result column="room_id" property="roomId" />
         <result column="anchor_id" property="anchorId"/>
         <result column="type" property="type" />
         <result column="room_name" property="roomName" />
@@ -47,11 +48,11 @@
 
     <select id="selectLivingRoomPage" resultMap="dataMap">
         SELECT * FROM living_room
-            where type = #{type} and status = true
+            where type = #{type} and status = 1
             LIMIT #{limit} OFFSET #{offset}
     </select>
     <select id="selectAll" resultMap="dataMap">
-        select * from living_room where type = #{type} and status = true
+        select * from living_room where type = #{type} and status = 1
         order by start_time desc
     </select>
     <select id="selectOneByRoomId" resultMap="dataMap">
@@ -59,5 +60,10 @@
         where room_id = #{roomId} and status = 1
         limit 1
    </select>
+    <select id="selectOne" resultMap="dataMap">
+        select * from living_room
+        where  anchor_id = #{anchorId} and status = #{status}
+        limit 1
+    </select>
 
 </mapper>

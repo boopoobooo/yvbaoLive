@@ -20,4 +20,5 @@ public interface ILivingRoomMapper {
     List<LivingRoomPO>  selectAll(@Param("type") Integer type);
 
     LivingRoomPO selectOneByRoomId(@Param("roomId") Integer roomId);
+    LivingRoomPO selectOne(LivingRoomPO livingRoomPO);
 }

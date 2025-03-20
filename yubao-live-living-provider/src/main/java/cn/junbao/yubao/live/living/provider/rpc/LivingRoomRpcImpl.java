@@ -59,4 +59,9 @@ public class LivingRoomRpcImpl implements ILivingRoomRpc {
     public Long queryOnlinePkUserId(Integer roomId) {
         return livingRoomService.queryOnlinePkUserId(roomId);
     }
+
+    @Override
+    public LivingRoomRespDTO queryByAnchorId(Long anchorId) {
+        return livingRoomService.queryByAnchorId(anchorId);
+    }
 }

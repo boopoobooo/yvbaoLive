@@ -59,7 +59,6 @@ public class WsSharkHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest msg) {
-        // ws://127.0.0.1:8809/token={token}&userId={userId}&{roomId}=roomId
         // ws://127.0.0.1:8809/{token}/{userId}/{code}/{param}
         // 基于code去做不同策略的参数解析
         String webSocketUrl = "ws://" + serverIp + ":" + port;

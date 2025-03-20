@@ -59,4 +59,6 @@ public interface ILivingRoomRpc {
      * 根据roomId查询当前pk人是谁
      */
     Long queryOnlinePkUserId(Integer roomId);
+
+    LivingRoomRespDTO queryByAnchorId(Long userId);
 }

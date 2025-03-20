@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.junbao.yubao.live.gift.provider.dao.mapper.IRedPacketConfigMapper">
+
+    <resultMap id="dataMap" type="cn.junbao.yubao.live.gift.provider.dao.po.RedPacketConfigPO">
+        <id property="id" column="id"/>
+        <result property="anchorId" column="anchor_id"/>
+        <result property="startTime" column="start_time"/>
+        <result property="totalGet" column="total_get"/>
+        <result property="totalGetPrice" column="total_get_price"/>
+        <result property="maxGetPrice" column="max_get_price"/>
+        <result property="status" column="status"/>
+        <result property="totalPrice" column="total_price"/>
+        <result property="totalCount" column="total_count"/>
+        <result property="configCode" column="config_code"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+    <insert id="insert" parameterType="cn.junbao.yubao.live.gift.provider.dao.po.RedPacketConfigPO">
+        INSERT INTO red_packet_config (
+            anchor_id, start_time, total_get, total_get_price, max_get_price, status, total_price, total_count, config_code, remark, create_time, update_time
+        ) VALUES (
+        #{anchorId}, #{startTime}, #{totalGet}, #{totalGetPrice}, #{maxGetPrice},
+          #{status}, #{totalPrice}, #{totalCount}, #{configCode}, #{remark}, now(), now()
+         )
+    </insert>
+    <select id="findByAnchorId" resultMap="dataMap">
+        SELECT * FROM red_packet_config
+                 WHERE anchor_id = #{anchorId} and status = 1;
+    </select>
+    <select id="selectOne" resultMap="dataMap">
+        SELECT * FROM red_packet_config
+        <where>
+            <if test="anchorId != null">AND anchor_id = #{anchorId}</if>
+            <if test="startTime != null">AND start_time = #{startTime}</if>
+            <if test="configCode != null">AND config_code = #{configCode}</if>
+            <if test="status != null">AND status = #{status}</if>
+        </where>
+        order by start_time
+        limit 1
+    </select>
+
+    <update id="updateRedPacketConfig">
+        UPDATE red_packet_config
+        SET total_get = #{totalGet},
+            total_get_price = #{totalGetPrice},
+            max_get_price = #{maxGetPrice},
+            status = #{status},
+            total_price = #{totalPrice},
+            total_count = #{totalCount},
+            remark = #{remark},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+    <update id="updateById" parameterType="cn.junbao.yubao.live.gift.provider.dao.po.RedPacketConfigPO">
+        UPDATE red_packet_config
+        SET anchor_id = #{anchorId},
+            start_time = #{startTime},
+            total_get = #{totalGet},
+            total_get_price = #{totalGetPrice},
+            max_get_price = #{maxGetPrice},
+            status = #{status},
+            total_price = #{totalPrice},
+            total_count = #{totalCount},
+            config_code = #{configCode},
+            remark = #{remark},
+            update_time = now()
+        WHERE id = #{id}
+    </update>
+
+</mapper>
