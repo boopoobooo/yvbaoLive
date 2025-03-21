@@ -2,6 +2,8 @@ package cn.junbao.yubao.live.bank.interfaces;
 
 import cn.junbao.yubao.live.bank.dto.PayOrderDTO;
 
+import java.util.Map;
+
 /**
  * @Author: Junbao
  * @Date: 2025/3/14 09:42
@@ -11,17 +13,17 @@ public interface IPayOrderRpc {
     /**
      *插入订单 ，返回orderId
      */
-    String insertOne(PayOrderDTO payOrderDTO);
-
-    /**
-     * 根据主键id更新订单状态
-     */
-    boolean updateOrderStatus(Long id, Integer status);
+    Long insertOne(PayOrderDTO payOrderDTO);
 
     /**
      * 更新订单状态
      */
-    boolean updateOrderStatus(String orderId, Integer status);
+    boolean updateOrderStatus(Long orderId, Integer status);
+
+    /**
+     * 产品支付
+     */
+     String doPrepayOrder(PayOrderDTO payOrderDTO);
 
 
     /**
@@ -29,4 +31,5 @@ public interface IPayOrderRpc {
      */
     boolean payNotify(PayOrderDTO payOrderDTO);
 
+    boolean checkSignature(Map<String, String> params);
 }

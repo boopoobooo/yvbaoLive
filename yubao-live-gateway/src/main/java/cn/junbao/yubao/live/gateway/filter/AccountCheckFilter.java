@@ -51,12 +51,12 @@ public class AccountCheckFilter implements GlobalFilter, Ordered {
             log.warn("[AccountCheckFilter]当前请求路径为空");
             return Mono.empty();
         }
-
+        log.info("[AccountCheckFilter]请求路径为：{}",requestPath);
         // 检查请求路径是否在白名单中或以白名单路径为前缀
         List<String> whiteList = yuBaoGatewayProperties.getWhileList();
         for (String whiteListPath : whiteList) {
             if (requestPath.startsWith(whiteListPath)) {
-                log.info("请求路径 {} matches whitelist prefix {}, allowing access", requestPath, whiteListPath);
+                log.info("请求路径 {} matches whitelist prefix {}, 允许放行", requestPath, whiteListPath);
                 return chain.filter(exchange); // 放行
             }
         }

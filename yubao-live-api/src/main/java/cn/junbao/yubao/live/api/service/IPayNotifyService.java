@@ -1,5 +1,7 @@
 package cn.junbao.yubao.live.api.service;
 
+import java.util.Map;
+
 public interface IPayNotifyService {
-    String notifyHandler(String paramJson);
+    boolean notifyHandler(Map<String, String> requestParams);
 }

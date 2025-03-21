@@ -22,7 +22,10 @@ public interface IPayOrderMapper {
 
     int updateById(PayOrderPO payOrderPO);
 
-    int deleteById(@Param("id") Long id);
-
     int updateByOrderId(PayOrderPO payOrderPO);
+
+    List<Long> queryNoPayNotifyOrder();
+
+    List<Long> queryTimeoutCloseOrderList();
+
 }

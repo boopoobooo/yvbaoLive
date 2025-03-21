@@ -16,8 +16,11 @@ import java.util.Date;
 @NoArgsConstructor
 public class PayOrderPO {
     private Long id;
-    private String orderId;
+    private Long orderId;
     private Integer productId;
+    private String productName;
+    private String productDesc;
+    private Integer totalAmount;
     private Long userId;
     private Integer source;
     private Integer payChannel;

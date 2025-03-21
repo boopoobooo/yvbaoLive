@@ -3,6 +3,7 @@ package cn.junbao.yubao.live.api.service;
 import cn.junbao.yubao.live.api.vo.req.PayProductReqVO;
 import cn.junbao.yubao.live.api.vo.resp.PayProductRespVO;
 import cn.junbao.yubao.live.api.vo.resp.PayProductVO;
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface IBankService {
     /**
@@ -14,4 +15,5 @@ public interface IBankService {
      * 发起支付
      */
     PayProductRespVO payProduct(PayProductReqVO payProductReqVO);
+
 }

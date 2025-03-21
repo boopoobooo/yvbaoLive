@@ -1,5 +1,6 @@
 package cn.junbao.yubao.live.api.service.impl;
 
+import cn.junbao.yubao.live.api.error.ApiErrorEnum;
 import cn.junbao.yubao.live.api.service.IBankService;
 import cn.junbao.yubao.live.api.vo.req.PayProductReqVO;
 import cn.junbao.yubao.live.api.vo.resp.PayProductItemVO;
@@ -12,6 +13,7 @@ import cn.junbao.yubao.live.bank.interfaces.ICurrencyAccountRpc;
 import cn.junbao.yubao.live.bank.interfaces.IPayOrderRpc;
 import cn.junbao.yubao.live.bank.interfaces.IPayProductRpc;
 import cn.junbao.yubao.live.framework.web.strater.context.WebRequestContext;
+import cn.junbao.yubao.live.framework.web.strater.exception.YuBaoErrorException;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -61,34 +63,42 @@ public class BankServiceImpl implements IBankService {
 
     @Override
     public PayProductRespVO payProduct(PayProductReqVO payProductReqVO) {
-        // 参数校验
-
+        // 1.参数校验
         if ( payProductReqVO.getProductId() == null || payProductReqVO.getPaySource() == null){
             log.warn("[payProduct]参数错误,payProductReqVO:{}", payProductReqVO);
-            return null;
+            throw new YuBaoErrorException(ApiErrorEnum.PARAM_ERROR.getCode(),ApiErrorEnum.PARAM_ERROR.getMsg());
         }
-        // 查询payProductDTO
+
+        // 2. 查询payProductDTO
         PayProductDTO payProductDTO = payProductRpc.getByProductId(payProductReqVO.getProductId());
         if (payProductDTO == null){
             log.warn("[payProduct] payProductDTO is null");
-            return null;
+            throw new YuBaoErrorException(ApiErrorEnum.PARAM_ERROR.getCode(),ApiErrorEnum.PARAM_ERROR.getMsg());
         }
 
-        // 生成一条订单（待支付状态）
+        //3. 创建订单 生成一条订单（待支付状态）
         PayOrderDTO payOrderDTO = new PayOrderDTO();
         payOrderDTO.setProductId(payProductReqVO.getProductId());
+        payOrderDTO.setProductName(payProductDTO.getName());
+        payOrderDTO.setProductDesc(payProductDTO.getName());
+        payOrderDTO.setTotalAmount(payProductDTO.getPrice());
         payOrderDTO.setUserId(WebRequestContext.getUserId());
         payOrderDTO.setPayTime(new Date());
         payOrderDTO.setSource(payProductReqVO.getPaySource());
         payOrderDTO.setPayChannel(payProductReqVO.getPayChannel());
-        String orderId = payOrderRpc.insertOne(payOrderDTO);
+        payOrderDTO.setStatus(OrderStatusEnum.WAITING_PAY.getCode());
+        Long orderId = payOrderRpc.insertOne(payOrderDTO);
+        payOrderDTO.setOrderId(orderId);
 
-        //调用支付....todo 对接支付宝沙箱
+        //4. 调用alipay接口  赋值dto中的payurl
+        String payUrl = payOrderRpc.doPrepayOrder(payOrderDTO);
+        log.info("[payProduct]支付宝沙箱响应 payurl = {}",payUrl);
 
-        // 模拟点击 去支付 按钮，更新订单状态为 支付中
+        //5. 更新订单状态为支付中
         payOrderRpc.updateOrderStatus(orderId, OrderStatusEnum.PAYING.getCode());
         PayProductRespVO payProductRespVO = new PayProductRespVO();
         payProductRespVO.setOrderId(orderId);
+        payProductRespVO.setPayUrl(payUrl);
         return payProductRespVO;
 
     }

@@ -15,7 +15,7 @@ public enum OrderStatusEnum {
     PAYING(1, "支付中"),
     PAYED(2, "已支付"),
     PAY_BACK(3, "撤销"),
-    IN_VALID(4, "无效");
+    IN_VALID(4, "超时无效");
 
     int code;
     String desc;

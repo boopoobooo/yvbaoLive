@@ -20,12 +20,17 @@ public class PayOrderDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 7571445890267627658L;
     private Long id;
-    private String orderId;
+    private Long orderId;
     private Integer productId;
+    private String productName;
+    private String productDesc;
+    private Integer totalAmount;
     private Integer bizCode;
     private Long userId;
     private Integer source;
     private Integer payChannel;
     private Integer status;
     private Date payTime;
+
+    private String payUrl;
 }

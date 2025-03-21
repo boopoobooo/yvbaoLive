@@ -9,5 +9,7 @@ import lombok.Data;
  */
 @Data
 public class PayProductRespVO {
-    private String orderId;
+    private Long orderId;
+    private String payUrl;
+
 }
